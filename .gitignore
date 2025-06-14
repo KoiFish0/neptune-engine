@@ -1,0 +1,13 @@
+# Directories
+build/
+assets/
+src/shaders/
+
+# File types
+*.bin
+
+# Files
+todo.md
+CMakeLists.txt
+compile_commands.json
+build.sh

@@ -75,7 +75,18 @@ int main(void) {
        0.5f, -0.5f    // Bottom right
   };
 
-  createTriangle2D(0.0f, 0.0f, vertices, colorToShader("#ffffff")); 
+  std::vector<float> quadVertices = {
+      // p0
+      -0.5f,  0.5f,
+      // p1
+       0.5f,  0.5f,
+      // p2
+       0.5f, -0.5f,
+      // p3
+      -0.5f, -0.5f
+  };
+  
+  createRect2D(0.0f, 0.0f, quadVertices, colorToShader("#ffffff"));
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
@@ -84,8 +95,6 @@ int main(void) {
 
     /* Poll for and process events */
     updateInputState(window);
-
-    triangles[0].posX = sin(glfwGetTime());
 
     drawElements(); // Custom draw function for drawing primitives
     /* Swap front and back buffers */

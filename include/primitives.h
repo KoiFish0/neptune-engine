@@ -3,7 +3,7 @@
  * Handles classes and draw calls for primitive
  * shapes (triangles, rects, circles). Stores
  * data for multiple primitive objects in an
- * array (std::vector<{primitive}).
+ * array (std::vector<{primitive}>).
  *
  * This file also declares functions to 
  * initialize primitives for use by external
@@ -45,7 +45,6 @@ struct Triangle {
   unsigned int VAO;
   unsigned int VBO;
   float posX, posY;
-  float scaleX, scaleY;
   unsigned int shaderProgram;
 
   /*Triangle draw method
@@ -148,7 +147,6 @@ struct Rect {
   unsigned int VAO;
   unsigned int VBO;
   float posX, posY;
-  float scaleX, scaleY;
   unsigned int shaderProgram;
 
   /* Rect draw method
@@ -203,5 +201,4 @@ Triangle createTriangle2D(float, float, std::vector<float>, unsigned int);
 
 Circle createCircle2D(int, float, std::string);
 
-Rect drawRect2D(float, float, std::string, unsigned int, bool);
-
+Rect createRect2D(float, float, std::vector<float>, unsigned int);

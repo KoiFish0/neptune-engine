@@ -20,7 +20,7 @@
 #include <GLFW/glfw3.h>
 
 #include <string>
-
+#include <math.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -28,11 +28,11 @@
 
 #include <vector>
 
+#include "camera.h"
 #include "globals.h"
 
-extern std::vector<unsigned int> triangleVAOs;
 
-void drawTriangle2D(float*, size_t);
+// 2D
 
 /* Triangle class 
  * 
@@ -40,7 +40,7 @@ void drawTriangle2D(float*, size_t);
  * - Includes a draw method to draw the triangle
  * */
 
-struct Triangle {
+struct Triangle2D {
   // Triangle data
   unsigned int VAO;
   unsigned int VBO;
@@ -92,7 +92,7 @@ struct Triangle {
  * - Includes a draw method to draw the circle 
  * */
 
-struct Circle {
+struct Circle2D {
   unsigned int VAO;
   unsigned int VBO;
   int vertexCount;
@@ -143,7 +143,7 @@ struct Circle {
  * - Includes a draw method to draw the circle 
  * */
 
-struct Rect {
+struct Rect2D {
   unsigned int VAO;
   unsigned int VBO;
   float posX, posY;
@@ -192,13 +192,77 @@ struct Rect {
 };
 
 // Some arrays to store primitive objects
-extern std::vector<Triangle> triangles;
-extern std::vector<Circle> circles;
-extern std::vector<Rect> rects;
+extern std::vector<Triangle2D> triangles2D;
+extern std::vector<Circle2D> circles2D;
+extern std::vector<Rect2D> rects2D;
 
 // Declare some functions for creating/initializing primitives
-Triangle createTriangle2D(float, float, std::vector<float>, unsigned int); 
+Triangle2D createTriangle2D(float, float, std::vector<float>, unsigned int); 
 
-Circle createCircle2D(int, float, std::string);
+Circle2D createCircle2D(int, float, std::string);
 
-Rect createRect2D(float, float, std::vector<float>, unsigned int);
+Rect2D createRect2D(float, float, std::vector<float>, unsigned int);
+
+// 3D
+
+struct Triangle3D {
+  unsigned int VAO;
+  unsigned int VBO;
+  glm::vec3 pos;
+  glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+  unsigned int shaderProgram;
+
+  /*Triangle draw method
+   *
+   * Draws a triangle given a shader program
+   * and uses the stored VAO and VBO associated
+   * with the triangle object.
+   *
+   * Example: 
+   *
+   * while (gameloop) {
+   *   triangle.draw();
+   * }
+   * */
+
+  void draw(unsigned int shaderProgram) {
+    glUseProgram(shaderProgram);
+
+    float aspect = static_cast<float>(width) / static_cast<float>(height);
+
+    // Build the transformation matrix
+    glm::mat4 identity = glm::mat4(1.0f); // identity matrix 
+    
+    // Apply translation
+    glm::mat4 model = glm::translate(identity, pos); 
+
+    // Apply rotation on top of translation
+    model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0)); 
+    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0)); 
+    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1)); 
+
+    // Apply scale on top of translation and rotation
+    model = glm::scale(model, scale); 
+
+    glm::mat4 view = activeCamera.getViewMatrix();
+
+    glm::mat4 projection = activeCamera.getProjectionMatrix();
+
+    glm::mat4 mvp = projection * view * model;
+
+    // Send the transform to the shader
+    int transformLoc = glGetUniformLocation(shaderProgram, "u_transform");
+
+    glUniformMatrix4fv(transformLoc, 1, 0, glm::value_ptr(mvp));
+
+    // Bind VAO and draw
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+  }  
+
+};
+
+extern std::vector<Triangle3D> triangles3D;
+
+Triangle3D createTriangle3D(glm::vec3, std::vector<float>, unsigned int);

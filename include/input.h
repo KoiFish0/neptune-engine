@@ -16,4 +16,7 @@ bool getMouseDown(int button);
 
 double getMouseX(GLFWwindow*);
 double getMouseY(GLFWwindow*);
+
+extern float delta;
+
 #endif

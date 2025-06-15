@@ -26,10 +26,13 @@
 #include "globals.h"
 #include "input.h"
 #include "draw.h"
+#include "camera.h"
 
 int width = 2560;
 int height = 1440;
 GLFWwindow *globalWindow;
+
+Camera activeCamera;
 
 void framebuffer_size_callback(GLFWwindow* window, int w, int h) {
     width = w;
@@ -70,9 +73,9 @@ int main(void) {
   inputInit();
   
   std::vector<float> vertices = {
-       0.0f,  0.5f,   // Top vertex
-      -0.5f, -0.5f,   // Bottom left
-       0.5f, -0.5f    // Bottom right
+       0.0f,  0.5f, 0.0f,  // Top vertex
+      -0.5f, -0.5f, 0.0f,  // Bottom left
+       0.5f, -0.5f, 0.0f  // Bottom right
   };
 
   std::vector<float> quadVertices = {
@@ -86,15 +89,53 @@ int main(void) {
       -0.5f, -0.5f
   };
   
-  createRect2D(0.0f, 0.0f, quadVertices, colorToShader("#ffffff"));
+  // createRect2D(0.0f, 0.0f, quadVertices, colorToShader("#ffffff"));
+ 
+  Camera camera;
+
+  camera = camera.create(
+      glm::vec3(0.0f, 0.0f, 1.0f),   // position: 5 units away from origin along z-axis
+      glm::vec3(0.0f, 0.0f, -1.0f),  // lookVector: looking toward negative z-axis
+      glm::vec3(0.0f, 1.0f, 0.0f),
+      glm::radians(45.0f),           // fov: 45 degrees field of view in radians
+      16.0f / 9.0f,                  // aspectRatio: widescreen
+      0.1f,                          // nearPlane
+      100.0f                         // farPlane
+  );
+
+  activeCamera = camera;
+
+  Triangle3D triangle = createTriangle3D(glm::vec3(0.0f, 0.0f, 0.0f), vertices, colorToShader("#ffffff"));
+
+  float speed = 1.0f;
+  
+  glEnable(GL_DEPTH_TEST);
 
   /* Loop until the user closes the window */
   while (!glfwWindowShouldClose(window)) {
     /* Render here */
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     /* Poll for and process events */
     updateInputState(window);
+
+    if (getKeyDown(GLFW_KEY_W)) {
+      activeCamera.position.z -= speed * delta;
+    }
+
+    if (getKeyDown(GLFW_KEY_S)) {
+      activeCamera.position.z += speed * delta;
+    }
+
+    if (getKeyDown(GLFW_KEY_A)) {
+      activeCamera.position.x -= speed * delta;
+    }
+
+    if (getKeyDown(GLFW_KEY_D)) {
+      activeCamera.position.x += speed * delta;
+    }
+
+    printf("%f, %f, %f\n", activeCamera.position.x, activeCamera.position.y, activeCamera.position.z);
 
     drawElements(); // Custom draw function for drawing primitives
     /* Swap front and back buffers */

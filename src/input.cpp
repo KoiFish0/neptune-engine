@@ -2,12 +2,26 @@
 #include <GLFW/glfw3.h>
 
 #include "input.h"
+#include "globals.h"
+
 // Some variables for tracking current and previous states for buttons/keys
 static bool currentState[GLFW_KEY_LAST + 1] = { false };
 static bool previousState[GLFW_KEY_LAST + 1] = { false };
 
 static bool currentMouse[GLFW_MOUSE_BUTTON_LAST + 1] = { false };
 static bool previousMouse[GLFW_MOUSE_BUTTON_LAST + 1] = { false };
+// Delta time
+float lastTime = glfwGetTime();
+
+float getDelta() {
+  float delta = glfwGetTime() - lastTime;
+  lastTime = glfwGetTime();
+  
+  return delta;
+}
+
+float delta;
+
 // Zero out all the values for input tracking
 void inputInit() {
     for (int i = 0; i <= GLFW_KEY_LAST; ++i) {
@@ -22,6 +36,8 @@ void inputInit() {
 // Retrieve the current input state using GLFW for all keys up to GLFW_KEY_LAST which equates to key 348, the last in the sequence
 void updateInputState(GLFWwindow* window) {
     glfwPollEvents();
+    delta = getDelta();
+
     for (int i = 0; i <= GLFW_KEY_LAST; ++i) {
         previousState[i] = currentState[i];
         currentState[i] = (glfwGetKey(window, i) == GLFW_PRESS);
@@ -68,3 +84,4 @@ double getMouseY(GLFWwindow* window) {
   glfwGetCursorPos(window, &xpos, &ypos);
   return ypos;
 }
+

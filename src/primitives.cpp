@@ -12,8 +12,10 @@ double pi = 2*acos(0.0);
 
 float aspectRatio = (float)width / (float)height; 
 
+// 2D primitives
+
 // Array to store triangle objects
-std::vector<Triangle> triangles;
+std::vector<Triangle2D> triangles2D;
 
 /* Creates a 2D triangle and puts it in an array.
  *
@@ -29,7 +31,7 @@ std::vector<Triangle> triangles;
  * program to be used when drawing the triangle.
  * */
 
-Triangle createTriangle2D(float posX, float posY, std::vector<float> vertices, unsigned int shaderProgram) {
+Triangle2D createTriangle2D(float posX, float posY, std::vector<float> vertices, unsigned int shaderProgram) {
   // Some boilerplate code 
   unsigned int VAO, VBO;
   glGenVertexArrays(1, &VAO);
@@ -42,20 +44,20 @@ Triangle createTriangle2D(float posX, float posY, std::vector<float> vertices, u
   glVertexAttribPointer(0, 2, GL_FLOAT, false, sizeof(float) * 2, (void*)0);
   glEnableVertexAttribArray(0);
 
-  Triangle triangle; // Create a Triangle object to store data about the triangle
+  Triangle2D triangle; // Create a Triangle object to store data about the triangle
   triangle.VAO = VAO;
   triangle.VBO = VBO;
   triangle.posX = posX;
   triangle.posY = posY;
   triangle.shaderProgram = shaderProgram;
 
-  triangles.push_back(triangle); // Send the data to the triangles array
+  triangles2D.push_back(triangle); // Send the data to the triangles array
 
   return triangle;
 }
 
 // Array to store circle objects
-std::vector<Circle> circles;
+std::vector<Circle2D> circles2D;
 
 /* Creates a 2D circle and puts it in an array.
  * 
@@ -75,7 +77,7 @@ std::vector<Circle> circles;
  * used to render the circle.
  * */
 
-Circle createCircle2D(float posX, float posY, int faces, float radius, unsigned int shaderProgram) {
+Circle2D createCircle2D(float posX, float posY, int faces, float radius, unsigned int shaderProgram) {
     float deltaTheta = 2 * pi / faces;
     std::vector<float> vertices;
 
@@ -101,7 +103,7 @@ Circle createCircle2D(float posX, float posY, int faces, float radius, unsigned 
     glEnableVertexAttribArray(0);
     
     // Create a circle object and send relevant data to it
-    Circle circle;
+    Circle2D circle;
     circle.VAO = VAO;
     circle.VBO = VBO;
     circle.vertexCount = static_cast<int>(vertices.size() / 2);
@@ -111,12 +113,12 @@ Circle createCircle2D(float posX, float posY, int faces, float radius, unsigned 
     circle.shaderProgram = shaderProgram;
     
     // Put the circle in the previously declared array
-    circles.push_back(circle);
+    circles2D.push_back(circle);
     return circle;
 }
 
 // Array to store rect objects
-std::vector<Rect> rects;
+std::vector<Rect2D> rects2D;
 
 /* Create a quadrilateral given an array
  * of 4 vertices as 2D floating point 
@@ -124,7 +126,7 @@ std::vector<Rect> rects;
  * are the same as the previous methods.
  * */
 
-Rect createRect2D(float posX, float posY, std::vector<float> vertices, unsigned int shaderProgram) {
+Rect2D createRect2D(float posX, float posY, std::vector<float> vertices, unsigned int shaderProgram) {
 
   /* Convert vertices which expects 4 positions to
    * an array containing 6 positions which is needed
@@ -157,7 +159,7 @@ Rect createRect2D(float posX, float posY, std::vector<float> vertices, unsigned 
   glEnableVertexAttribArray(0);
 
   // Create a rect object and send relevant data to it
-  Rect rect;
+  Rect2D rect;
   rect.VAO = VAO;
   rect.VBO = VBO;
   rect.posX = posX;
@@ -165,7 +167,34 @@ Rect createRect2D(float posX, float posY, std::vector<float> vertices, unsigned 
   rect.shaderProgram = shaderProgram;
 
   // Put the rect in the previously declared array
-  rects.push_back(rect);
+  rects2D.push_back(rect);
   return rect;
 }
 
+// 3D
+
+std::vector<Triangle3D> triangles3D;
+
+Triangle3D createTriangle3D(glm::vec3 pos, std::vector<float> vertices, unsigned int shaderProgram) {
+  // Some boilerplate code 
+  unsigned int VAO, VBO;
+  glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
+
+  glBindVertexArray(VAO);
+  glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+
+  glVertexAttribPointer(0, 3, GL_FLOAT, false, sizeof(float) * 3, (void*)0);
+  glEnableVertexAttribArray(0);
+
+  Triangle3D triangle; // Create a Triangle object to store data about the triangle
+  triangle.VAO = VAO;
+  triangle.VBO = VBO;
+  triangle.pos = pos;
+  triangle.shaderProgram = shaderProgram;
+
+  triangles3D.push_back(triangle); // Send the data to the triangles array
+
+  return triangle;
+}

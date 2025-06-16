@@ -6,7 +6,6 @@
 
 #include "shader.h"
 #include "primitives.h"
-#include "globals.h"
 
 double pi = 2*acos(0.0);
 
@@ -32,7 +31,7 @@ std::vector<Triangle2D> triangles2D;
  * */
 
 Triangle2D createTriangle2D(float posX, float posY, std::vector<float> vertices, unsigned int shaderProgram) {
-  // Some boilerplate code 
+  // Create the triangle VAO and VBO 
   unsigned int VAO, VBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -173,10 +172,13 @@ Rect2D createRect2D(float posX, float posY, std::vector<float> vertices, unsigne
 
 // 3D
 
+// Array to store Triangle3D objects
 std::vector<Triangle3D> triangles3D;
 
+// Create/initialize a Triangle3D object
+// The arguments are the same as the 2D counterpart, only in 3D.
 Triangle3D createTriangle3D(glm::vec3 pos, std::vector<float> vertices, unsigned int shaderProgram) {
-  // Some boilerplate code 
+  // Create the triangle VAO and VBO  
   unsigned int VAO, VBO;
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &VBO);
@@ -194,7 +196,7 @@ Triangle3D createTriangle3D(glm::vec3 pos, std::vector<float> vertices, unsigned
   triangle.pos = pos;
   triangle.shaderProgram = shaderProgram;
 
-  triangles3D.push_back(triangle); // Send the data to the triangles array
+  triangles3D.push_back(triangle); // Send the data to the triangles3D array
 
   return triangle;
 }

@@ -2,7 +2,6 @@
 #include <GLFW/glfw3.h>
 
 #include "input.h"
-#include "globals.h"
 
 // Some variables for tracking current and previous states for buttons/keys
 static bool currentState[GLFW_KEY_LAST + 1] = { false };

@@ -1,7 +1,15 @@
+/* draw.cpp
+ *
+ * This file  allows for rendering of
+ * all primitives by iterating through
+ * their corresponding list.
+ * */
+
 #include "primitives.h"
 #include "draw.h"
 
 void drawElements() {
+    // 2D
     for (Triangle2D& triangle2D : triangles2D) {
       triangle2D.draw(triangle2D.shaderProgram);
     }

@@ -10,13 +10,14 @@ struct Camera {
   glm::vec3 position;
   glm::vec3 lookVector; // Look direction 
   glm::vec3 up; // Up vector relative to the look direction; used for pitch/roll
-
+  
+  // Camera properties that affect perspective projection 
   float fov;
   float aspectRatio;
   float nearPlane;
   float farPlane;
 
-  // Methods
+  // Create a camera and initialize it with the provide values
   Camera create(glm::vec3 position, glm::vec3 lookVector, glm::vec3 up, float fov, float aspectRatio, float nearPlane, float farPlane) {
     Camera camera;
 
@@ -38,8 +39,6 @@ struct Camera {
   glm::mat4 getProjectionMatrix() {
     return glm::perspective(fov, aspectRatio, nearPlane, farPlane);
   }
-  
-  // TODO Create some methods to transform the camera (Don't forget delta; Implement in globals.h)
 };
 
 #endif // CAMERA_H

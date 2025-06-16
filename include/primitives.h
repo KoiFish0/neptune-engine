@@ -1,3 +1,5 @@
+#ifndef PRIMITIVES_H
+#define PRIMITIVES_H
 /* PRIMITIVES.H
  *
  * Handles classes and draw calls for primitive
@@ -15,7 +17,6 @@
  * GLM  - https://github.com/g-truc/glm
  * */
 
-#pragma once
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -28,9 +29,7 @@
 
 #include <vector>
 
-#include "camera.h"
 #include "globals.h"
-
 
 // 2D
 
@@ -205,6 +204,13 @@ Rect2D createRect2D(float, float, std::vector<float>, unsigned int);
 
 // 3D
 
+/* Triangle3D class
+ *
+ * Stores data for a 3D triangle object
+ * and includes a draw call for rendering
+ * each frame.
+ * */
+
 struct Triangle3D {
   unsigned int VAO;
   unsigned int VBO;
@@ -213,17 +219,19 @@ struct Triangle3D {
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
   unsigned int shaderProgram;
 
-  /*Triangle draw method
-   *
-   * Draws a triangle given a shader program
-   * and uses the stored VAO and VBO associated
-   * with the triangle object.
-   *
-   * Example: 
-   *
-   * while (gameloop) {
-   *   triangle.draw();
-   * }
+  /* This draw method is mostly similar to the
+   * 2D counterpart, however, it uses a proper
+   * Model, View, Projection (MVP) matrix for
+   * 3D rendering. Model represents the 
+   * transformations of the triangle. View
+   * represents the view matrix of the active
+   * camera / viewport. Projection is for
+   * taking into account perspective, or in 
+   * other words, how things farther away 
+   * appear smaller. Multiplying these values
+   * together gives us the MVP matrix which we
+   * can then hand over to the shader to 
+   * create the illusion of a 3D triangle.
    * */
 
   void draw(unsigned int shaderProgram) {
@@ -241,13 +249,24 @@ struct Triangle3D {
     model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0)); 
     model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0)); 
     model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1)); 
+    
+    // TODO Look into quaternions; something like this
+//    glm::quat q = glm::quat(rotation);        // convert euler angles (XYZ) to quaternion
+//    glm::mat4 rotMatrix = glm::toMat4(q);     // get rotation matrix from quaternion
+//    model *= rotMatrix;
 
     // Apply scale on top of translation and rotation
     model = glm::scale(model, scale); 
-
+    
+    // Create the view matrix
     glm::mat4 view = activeCamera.getViewMatrix();
-
+    
+    // Create a perspective projection matrix
     glm::mat4 projection = activeCamera.getProjectionMatrix();
+    
+    /* Matrix multiplication is non-commutative
+     * so it must be multiplied in this order.
+     * */
 
     glm::mat4 mvp = projection * view * model;
 
@@ -266,3 +285,5 @@ struct Triangle3D {
 extern std::vector<Triangle3D> triangles3D;
 
 Triangle3D createTriangle3D(glm::vec3, std::vector<float>, unsigned int);
+
+#endif // PRIMITIVES_H

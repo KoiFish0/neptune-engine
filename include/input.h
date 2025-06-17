@@ -14,8 +14,8 @@ bool getMousePressed(int button);
 bool getMouseReleased(int button);   
 bool getMouseDown(int button);      
 
-double getMouseX(GLFWwindow*);
-double getMouseY(GLFWwindow*);
+double getMouseX();
+double getMouseY();
 
 extern float delta;
 

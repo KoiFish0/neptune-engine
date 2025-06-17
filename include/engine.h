@@ -10,6 +10,7 @@
 #include "input.h"
 #include "draw.h"
 #include "camera.h"
+#include "model.h"
 
 struct Engine {
 
@@ -42,6 +43,9 @@ struct Engine {
     
     // Handle draw order
     glEnable(GL_DEPTH_TEST);
+
+    // Capture the mouse and hide the cursor
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return window;
   }

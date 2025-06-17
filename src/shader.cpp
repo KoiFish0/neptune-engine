@@ -100,11 +100,11 @@ unsigned int colorToShader(const std::string& hexValue) {
 
     const char* vertexShaderSource =
         "#version 330 core\n"
-        "layout (location = 0) in vec2 aPos;\n"
+        "layout (location = 0) in vec3 aPos;\n"
         "uniform mat4 u_transform;\n"
         "void main()\n"
         "{\n"
-        "    vec4 pos = vec4(aPos, 0.0, 1.0);\n"
+        "    vec4 pos = vec4(aPos, 1.0);\n"
         "    gl_Position = u_transform * pos;\n"
         "}\n";
 

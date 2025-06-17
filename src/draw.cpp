@@ -6,6 +6,7 @@
  * */
 
 #include "primitives.h"
+#include "model.h"
 #include "draw.h"
 
 void drawElements() {
@@ -26,4 +27,8 @@ void drawElements() {
     for (Triangle3D& triangle3D : triangles3D) {
       triangle3D.draw(triangle3D.shaderProgram);
     }
+    
+    for (Mesh& mesh : meshes) {
+    mesh.draw(mesh.shaderProgram);
+  }
 }

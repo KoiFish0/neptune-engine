@@ -284,6 +284,6 @@ struct Triangle3D {
 
 extern std::vector<Triangle3D> triangles3D;
 
-Triangle3D createTriangle3D(glm::vec3, std::vector<float>, unsigned int);
+Triangle3D createTriangle3D(glm::vec3, float[], unsigned int);
 
 #endif // PRIMITIVES_H

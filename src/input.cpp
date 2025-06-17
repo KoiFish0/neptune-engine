@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include "input.h"
+#include "globals.h"
 
 // Some variables for tracking current and previous states for buttons/keys
 static bool currentState[GLFW_KEY_LAST + 1] = { false };
@@ -72,13 +73,13 @@ bool getMouseDown(int button) {
 }
 
 // Mouse positions
-double getMouseX(GLFWwindow* window) {
+double getMouseX() {
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
   return xpos;
 }
 
-double getMouseY(GLFWwindow* window) {
+double getMouseY() {
   double xpos, ypos;
   glfwGetCursorPos(window, &xpos, &ypos);
   return ypos;

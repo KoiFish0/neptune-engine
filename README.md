@@ -4,24 +4,31 @@ A minimal 3D game engine programmed and programmable in C++.
 
 ## Prerequisites
 
-To use this engine, it's recommended to have these skills:
+To use this engine, it's recommended to have:
  - Basic Computer Science Skills
  - Basic C++ Programming Skills
+ - Graphical programming knowledge
 
 ## Getting Started
 
-To use Neptune, you need to git clone this repository into your project include folder.
+To use Neptune, you need to git clone this repository.
 
 ```
-git clone https://github.com/KoiFish0/neptune-engine.git include/
+git clone https://github.com/KoiFish0/neptune-engine.git include/project-name
 ```
 
-From here, you can include the relevant header files from `include/neptune-engine/include/` and you should be ready to go. For now, there is no dedicated documentation. However, the source code is full of comments explaining how you can use the engine. 
+From here, you can put your code in main.cpp. There is already a relatively decent sample file in there already. Until a proper sample file and documentation is implemented, just use main.cpp. 
+## Documentation
+
+Currently, there is no proper documentation, however, the comments in my code should serve as adequate documentation of the engine. 
+
+> **Note:** This engine has only been verified to work on Linux.
 
 ## Mentions
 
 This project would not have been possible without these resources:
 
- - https://www.opengl-tutorial.org/
  - https://learnopengl.com/
+ - https://devdocs.io/cpp/
+ - https://docs.gl/
 

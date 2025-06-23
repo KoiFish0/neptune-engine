@@ -5,26 +5,33 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "shapes.h"
 #include "shader.h"
-#include "primitives.h"
 #include "input.h"
-#include "draw.h"
 #include "camera.h"
-#include "model.h"
+#include "globals.h"
 
-struct Engine {
+class Engine {
+private:
 
-  int initialize() {
+  static void draw() {
+    for (Triangle2D& triangle2D : triangle2Ds) {
+      triangle2D.draw();
+    }
+  }
+
+public:
+  static int initialize() {
     // Initialize GLFW
     if (!glfwInit())
       return -1;
 
     // Initialize input 
-    inputInit();
+    Input::inputInit();
     return 0;
   }
 
-  GLFWwindow* createWindow(int width, int height, const char *title) {
+  static GLFWwindow* createWindow(int width, int height, const char *title) {
     // Create a windowed mode window and its OpenGL context 
     window = glfwCreateWindow(width, height, title, NULL, NULL);
 
@@ -50,20 +57,20 @@ struct Engine {
     return window;
   }
 
-  void refresh() {
+  static void refresh() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
     // Register user inputs 
-    updateInputState(window);
+    Input::updateInputState(window);
     
     // Custom draw function for drawing primitives
-    drawElements(); 
+    draw(); 
     
     // Swap front and back buffers
     glfwSwapBuffers(window);
   }
 
-  void terminate() {
+  static void terminate() {
     glfwTerminate();
   }
 };
@@ -71,9 +78,7 @@ struct Engine {
 // A pointer to the window; gives a handle to the window to other files
 GLFWwindow* window;
 
-// Current active camera; allows multiple cameras and swapping between them
+// Current active camera; allows multiple cameras and swapping between them if needed 
 Camera activeCamera;
-// A handle the engine
-Engine engine;
 
 #endif // ENGINE_H

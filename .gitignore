@@ -1,7 +1,7 @@
 # Directories
 build/
 assets/
-src/shaders/
+old/
 
 # File types
 *.bin
@@ -11,3 +11,4 @@ todo.md
 CMakeLists.txt
 compile_commands.json
 build.sh
+main

@@ -10,11 +10,11 @@ To use this engine, it's recommended to have:
 
 ## Dependencies
  - git
-    Recommended tool to clone the repo
+     - Recommended tool to clone the repo
  - C/C++ Compiler (gcc, clang, etc.)
-    Needed to compile the code
+     - Needed to compile the code
  - CMake
-    An alternative method of compiling
+     - An alternative method of compiling
     
 
 ## Getting Started

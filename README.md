@@ -1,6 +1,6 @@
 # Neptune 
 
-> This engine is still under development and lacks significant features. I do not intend to 
+> This engine is still under development and lacks significant features.
 
 A minimal 3D game engine programmed and programmable in C++. 
 

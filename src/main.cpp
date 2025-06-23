@@ -21,19 +21,25 @@ int main(void) {
   window = Engine::createWindow(width, height, "Test");
 
   std::vector<float> vertices = {
-    // x, y for each vertex
-    0.0f, 0.5f,   // Vertex 1
-    -0.5f, -0.5f, // Vertex 2
-    0.5f, -0.5f   // Vertex 3
+    0.5f,  0.5f, 0.0f,  // top right
+    0.5f, -0.5f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f,  // bottom left
+    -0.5f,  0.5f, 0.0f   // top left 
   };
 
-  Triangle2D::create(0.0f, 0.0f, vertices, Shader::colorToShader2D("#ffbbff")); 
+  std::vector<unsigned int> indices = {  // note that we start from 0!
+    0, 1, 3,   // first triangle
+    1, 2, 3    // second triangle
+  };  
+
+  //  Triangle2D::create(vertices, Shader::colorToShader2D("#ffbbff")); 
+  Rect2D::create(vertices, indices, Shader::colorToShader2D("#bbbbbb")); 
 
   // Main loop
   while (!glfwWindowShouldClose(window)) {
     Engine::refresh();
   }
-  
+
   // Terminate the window
   Engine::terminate();
   return 0;

@@ -1,17 +1,17 @@
 /* MAIN.CPP
  *
- * This file  is just for development and is
- * not actually part of the engine. This 
- * should serve as a decent sample file until
- * a proper one is created for that purpose.
+ * This is a file for testing the
+ * engine as it is developed. It
+ * should serve as a good sample 
+ * file for the latest features.
  *
  * */
 
 // Include the engine
 #include "engine.h"
 
-int width = 2560;
-int height = 1440;
+int width = 1000;
+int height = 1000;
 
 int main(void) {
   // Initialize Neptune
@@ -20,20 +20,25 @@ int main(void) {
   // Create a window
   window = Engine::createWindow(width, height, "Test");
 
+  //  Engine::wireframeView(true);
+
   std::vector<float> vertices = {
-    0.5f,  0.5f, 0.0f,  // top right
-    0.5f, -0.5f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f,  // bottom left
-    -0.5f,  0.5f, 0.0f   // top left 
+    0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // top right
+    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom right
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
+    -0.5f,  0.5f, 0.0f, 0.5f, 0.5f, 1.0f  // top left 
   };
 
-  std::vector<unsigned int> indices = {  // note that we start from 0!
+  std::vector<unsigned int> indices = {
     0, 1, 3,   // first triangle
     1, 2, 3    // second triangle
   };  
 
-  //  Triangle2D::create(vertices, Shader::colorToShader2D("#ffbbff")); 
-  Rect2D::create(vertices, indices, Shader::colorToShader2D("#bbbbbb")); 
+  // Load and create a shader program from a file
+  Shader shaderProgram("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
+
+  //  Triangle2D::create(vertices, shaderProgram); 
+  Rect2D::create(vertices, indices, shaderProgram.ID); 
 
   // Main loop
   while (!glfwWindowShouldClose(window)) {

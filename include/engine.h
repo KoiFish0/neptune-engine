@@ -18,6 +18,10 @@ private:
     for (Triangle2D& triangle2D : triangle2Ds) {
       triangle2D.draw();
     }
+
+    for (Rect2D& Rect2D : Rect2Ds) {
+      Rect2D.draw();
+    }
   }
 
 public:
@@ -52,7 +56,7 @@ public:
     glEnable(GL_DEPTH_TEST);
 
     // Capture the mouse and hide the cursor
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     return window;
   }
@@ -73,6 +77,15 @@ public:
   static void terminate() {
     glfwTerminate();
   }
+
+  static void wireframeView(bool enabled) {
+    if (enabled) {
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    } else {
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+  }
+
 };
 
 // A pointer to the window; gives a handle to the window to other files

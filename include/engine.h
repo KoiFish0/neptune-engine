@@ -10,6 +10,7 @@
 #include "input.h"
 #include "camera.h"
 #include "globals.h"
+#include "texture.h"
 
 class Engine {
 private:

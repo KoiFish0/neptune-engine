@@ -67,8 +67,9 @@ private:
 public:
   float posX, posY;
   unsigned int shaderProgram;
+  unsigned int texture;
 
-  static Rect2D create(std::vector<float> &vertices, std::vector<unsigned int> &indices, unsigned int shaderProgram) {
+  static Rect2D create(std::vector<float> &vertices, std::vector<unsigned int> &indices, unsigned int newTexture, unsigned int shaderProgram) {
     unsigned int VAO, VBO, EBO;
 
 
@@ -83,16 +84,22 @@ public:
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
     // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3* sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3* sizeof(float)));
     glEnableVertexAttribArray(1);
+    // texture attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);  
 
     Rect2D rect;
     rect.VAO = VAO;
     rect.VBO = VBO;
     rect.shaderProgram = shaderProgram;
+    if (newTexture != 0) {
+      rect.texture = newTexture;
+    }
 
     Rect2Ds.push_back(rect);
     return rect;
@@ -100,6 +107,9 @@ public:
 
   void draw() {
     glUseProgram(shaderProgram);
+    if (texture) {
+      glBindTexture(GL_TEXTURE_2D, texture);
+    }
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);

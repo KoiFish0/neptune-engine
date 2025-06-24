@@ -20,13 +20,14 @@ int main(void) {
   // Create a window
   window = Engine::createWindow(width, height, "Test");
 
-  //  Engine::wireframeView(true);
+//  Engine::wireframeView(true);
 
   std::vector<float> vertices = {
-    0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,  // top right
-    0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,  // bottom right
-    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, // bottom left
-    -0.5f,  0.5f, 0.0f, 0.5f, 0.5f, 1.0f  // top left 
+    // positions          // colors           // texture coords
+    0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+    0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
   };
 
   std::vector<unsigned int> indices = {
@@ -36,9 +37,11 @@ int main(void) {
 
   // Load and create a shader program from a file
   Shader shaderProgram("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
+  
+  unsigned int woodTexture = Texture::loadTexture("assets/wood.jpg");
 
   //  Triangle2D::create(vertices, shaderProgram); 
-  Rect2D::create(vertices, indices, shaderProgram.ID); 
+  Rect2D::create(vertices, indices, woodTexture, shaderProgram.ID); 
 
   // Main loop
   while (!glfwWindowShouldClose(window)) {

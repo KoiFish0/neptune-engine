@@ -1,19 +1,19 @@
 # Neptune 
 
-> This engine is still under development and lacks significant features.
+> This engine is still under development and lacks significant features. It is currently more of an abstraction layer than an engine.
 
-A minimal 3D game engine programmed and programmable in C++. 
+A header-only low-level 3D game engine programmed and programmable in C++. There is no fancy gui or interface, just raw C/C++ and a text editor.
 
 
 ## Prerequisites
 
 To use this engine, it's recommended to have:
- - Basic C++ programming knowledge
- - Basic graphical programming knowledge
+ - Basic/Intermediate C++ programming knowledge
+ - Basic/Intermediate graphical programming knowledge
 
 ## Dependencies
  - git
-     - Recommended tool to clone the repo
+     - Recommended to clone the repo
  - C/C++ Compiler (gcc, clang, etc.)
      - Needed to compile the code
  - CMake

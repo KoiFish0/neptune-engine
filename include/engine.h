@@ -20,8 +20,12 @@ private:
       triangle2D.draw();
     }
 
-    for (Rect2D& Rect2D : Rect2Ds) {
-      Rect2D.draw();
+    for (ColorRect2D& ColorRect2D : ColorRect2Ds) {
+      ColorRect2D.draw();
+    }
+
+    for (TextureRect2D& TextureRect2D : TextureRect2Ds) {
+      TextureRect2D.draw();
     }
   }
 
@@ -58,6 +62,8 @@ public:
 
     // Capture the mouse and hide the cursor
     // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+    glfwSwapInterval(1); // Enable vsync
 
     return window;
   }

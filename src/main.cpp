@@ -37,11 +37,18 @@ int main(void) {
 
   // Load and create a shader program from a file
   Shader shaderProgram("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
-  
-  unsigned int woodTexture = Texture::loadTexture("assets/wood.jpg");
 
-  //  Triangle2D::create(vertices, shaderProgram); 
-  Rect2D::create(vertices, indices, woodTexture, shaderProgram.ID); 
+  unsigned int container = Texture::loadTextureRGB("assets/container.jpg", 0);
+  unsigned int awesomeface = Texture::loadTextureRGBA("assets/awesomeface.png", 1);
+
+  TextureRect2D square = TextureRect2D::create(vertices, indices, shaderProgram.ID); 
+  square.texture1 = container;
+  square.texture2 = awesomeface;
+
+  shaderProgram.use(); // Set active shader before setting uniforms
+
+  shaderProgram.setInt("texture1", 0);
+  shaderProgram.setInt("texture2", 1);
 
   // Main loop
   while (!glfwWindowShouldClose(window)) {

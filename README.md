@@ -1,9 +1,18 @@
-# Neptune 
+
+<div align="center">
+    <h1>Neptune</h1>
+</div>
+
+<p align="center">
+ <img src="images/neptune-engine.png" width="15%">
+</p>
+
+![GitHub commit activity](https://img.shields.io/github/commit-activity/t/KoiFish0/neptune-engine) ![GitHub last commit](https://img.shields.io/github/last-commit/KoiFish0/neptune-engine)
+
 
 > This engine is still under development and lacks significant features. It is currently more of an abstraction layer than an engine.
 
-A header-only low-level 3D game engine programmed and programmable in C++. There is no fancy gui or interface, just raw C/C++ and a text editor.
-
+A header-only low-level 3D game engine programmed and programmable in C++. No fancy gui or interface, just C/C++ and a text editor.
 
 ## Prerequisites
 

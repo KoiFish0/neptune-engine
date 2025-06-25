@@ -12,6 +12,8 @@
 #include "globals.h"
 #include "texture.h"
 
+GLFWwindow* window;
+
 class Engine {
 private:
 
@@ -27,6 +29,10 @@ private:
     for (TextureRect2D& TextureRect2D : TextureRect2Ds) {
       TextureRect2D.draw();
     }
+
+    for (TextureRect3D& TextureRect3D : TextureRect3Ds) {
+      TextureRect3D.draw();
+    }
   }
 
 public:
@@ -40,7 +46,7 @@ public:
     return 0;
   }
 
-  static GLFWwindow* createWindow(int width, int height, const char *title) {
+  static GLFWwindow* createWindow(int width, int height, const char* title) {
     // Create a windowed mode window and its OpenGL context 
     window = glfwCreateWindow(width, height, title, NULL, NULL);
 
@@ -61,7 +67,7 @@ public:
     glEnable(GL_DEPTH_TEST);
 
     // Capture the mouse and hide the cursor
-    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glfwSwapInterval(1); // Enable vsync
 
@@ -95,10 +101,6 @@ public:
 
 };
 
-// A pointer to the window; gives a handle to the window to other files
-GLFWwindow* window;
-
-// Current active camera; allows multiple cameras and swapping between them if needed 
 Camera activeCamera;
 
 #endif // ENGINE_H

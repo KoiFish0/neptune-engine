@@ -10,15 +10,15 @@
 // Include the engine
 #include "engine.h"
 
-int width = 1000;
-int height = 1000;
+int width = 2560;
+int height = 1440;
 
 int main(void) {
   // Initialize Neptune
   Engine::initialize();
 
   // Create a window
-  window = Engine::createWindow(width, height, "Test");
+  Engine::createWindow(width, height, "Test");
 
 //  Engine::wireframeView(true);
 
@@ -41,7 +41,7 @@ int main(void) {
   unsigned int container = Texture::loadTextureRGB("assets/container.jpg", 0);
   unsigned int awesomeface = Texture::loadTextureRGBA("assets/awesomeface.png", 1);
 
-  TextureRect2D square = TextureRect2D::create(vertices, indices, shaderProgram.ID); 
+  TextureRect3D square = TextureRect3D::create(vertices, indices, shaderProgram.ID); 
   square.texture1 = container;
   square.texture2 = awesomeface;
 
@@ -50,8 +50,88 @@ int main(void) {
   shaderProgram.setInt("texture1", 0);
   shaderProgram.setInt("texture2", 1);
 
+  Camera camera;
+
+  camera = camera.create(
+      glm::vec3(0.0f, 0.0f, 2.0f),   
+      glm::vec3(0.0f, 0.0f, -1.0f),  
+      glm::vec3(0.0f, 1.0f, 0.0f),
+      glm::radians(70.0f),           
+      16.0f / 9.0f,                  
+      0.1f,                          
+      100.0f                         
+  );
+  
+  // Set active camera
+  activeCamera = camera;
+
+  // Define movement speed
+  float speed = 3.0f;
+
+  double lastX = Input::getMouseX();
+  double lastY = Input::getMouseY();
+
+  float sensitivity = 0.15f;
+
+  float yaw = -90.0f; // Forward
+  float pitch = 0.0f;
+
   // Main loop
   while (!glfwWindowShouldClose(window)) {
+    double deltaX = Input::getMouseX() - lastX;
+    double deltaY = lastY - Input::getMouseY();
+    
+    deltaX *= sensitivity;
+    deltaY *= sensitivity;
+
+    lastX = Input::getMouseX();
+    lastY = Input::getMouseY();
+
+    yaw += deltaX;
+    pitch += deltaY;
+
+    // Limit pitch to avoid flipping
+    if (pitch > 89.0) {
+        pitch = 89.0;
+    }
+
+    if (pitch < -89.0) {
+        pitch = -89.0;
+    }
+
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    activeCamera.lookVector = normalize(front);
+
+    if (Input::getKeyDown(GLFW_KEY_W)) {
+      activeCamera.position.z -= cos(glm::radians(yaw + 90.0f)) * speed * delta;
+      activeCamera.position.x -= -sin(glm::radians(yaw + 90.0f)) * speed * delta;
+    }
+
+    if (Input::getKeyDown(GLFW_KEY_S)) {
+      activeCamera.position.z -= -cos(glm::radians(yaw + 90.0f)) * speed * delta;
+      activeCamera.position.x -= sin(glm::radians(yaw + 90.0f)) * speed * delta;
+    }
+
+    if (Input::getKeyDown(GLFW_KEY_A)) {
+      activeCamera.position.z -= cos(glm::radians(yaw)) * speed * delta;
+      activeCamera.position.x -= -sin(glm::radians(yaw)) * speed * delta;
+    }
+
+    if (Input::getKeyDown(GLFW_KEY_D)) {
+      activeCamera.position.z += cos(glm::radians(yaw)) * speed * delta;
+      activeCamera.position.x += -sin(glm::radians(yaw)) * speed * delta;
+    }
+
+    if (Input::getKeyDown(GLFW_KEY_SPACE)) {
+      activeCamera.position.y += speed * delta;
+    }
+
+    if (Input::getKeyDown(GLFW_KEY_LEFT_SHIFT)) {
+      activeCamera.position.y -= speed * delta;
+    }
     Engine::refresh();
   }
 

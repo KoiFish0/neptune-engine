@@ -31,7 +31,7 @@ To use this engine, it's recommended to have:
 
 ## Getting Started
 
-To use Neptune, you need to git clone this repository.
+To use Neptune, you need to clone this repository.
 
 ```
 git clone https://github.com/KoiFish0/neptune-engine.git ./project-name
@@ -41,7 +41,7 @@ From here, you can put your code in the src/ directory. You can use the included
 
 ## Documentation
 
-Currently, there is no proper documentation, however, the comments in my code should serve as adequate documentation of the engine in the mean time. 
+Documentation is available on the [wiki](https://github.com/KoiFish0/neptune-engine/wiki). The source code is also well commented if you want to see how the engine works.
 
 > [!NOTE] 
 > This engine has only been verified to work on Linux.

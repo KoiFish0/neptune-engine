@@ -19,21 +19,9 @@ int main(void) {
 
   // Create a window
   Engine::createWindow(width, height, "Test");
+  glClearColor(0.25f, 0.25f, 0.35f, 1.0f);
 
 //  Engine::wireframeView(true);
-
-  std::vector<float> vertices = {
-    // positions          // colors           // texture coords
-    0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
-    0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
-    -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
-    -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
-  };
-
-  std::vector<unsigned int> indices = {
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
-  };  
 
   // Load and create a shader program from a file
   Shader shaderProgram("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
@@ -41,18 +29,19 @@ int main(void) {
   unsigned int container = Texture::loadTextureRGB("assets/container.jpg", 0);
   unsigned int awesomeface = Texture::loadTextureRGBA("assets/awesomeface.png", 1);
 
-//  TextureRect3D square = TextureRect3D::create(vertices, indices, shaderProgram.ID); 
-//  square.texture1 = container;
-//  square.texture2 = awesomeface;
-  
   Cube cube = Cube::create(shaderProgram.ID);
-  cube.texture1 = container;
-  cube.texture2 = awesomeface;
+  Cube cube2 = Cube::create(shaderProgram.ID);
+  Cubes[0].texture1 = container;
+  Cubes[0].texture2 = awesomeface;
+  Cubes[1].texture1 = container;
+  Cubes[1].texture2 = awesomeface;
 
   shaderProgram.use(); // Set active shader before setting uniforms
 
   shaderProgram.setInt("texture1", 0);
   shaderProgram.setInt("texture2", 1);
+
+  Cubes[1].pos.x = 1.0f;
 
   Camera camera;
 

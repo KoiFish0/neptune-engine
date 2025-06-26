@@ -292,7 +292,7 @@ private:
   unsigned int VAO, VBO;
 
 public:
-  glm::vec3 pos;
+  glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
   unsigned int shaderProgram;
@@ -394,12 +394,7 @@ public:
   void draw() {
     glUseProgram(shaderProgram);
 
-    if (texture1 && !texture2) {
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, texture1);
-    }
-
-    if (texture2) {
+    if (texture1 || texture2) {
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, texture1);
       glActiveTexture(GL_TEXTURE1);

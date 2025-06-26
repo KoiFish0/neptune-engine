@@ -24,24 +24,16 @@ int main(void) {
 //  Engine::wireframeView(true);
 
   // Load and create a shader program from a file
-  Shader shaderProgram("src/shaders/vertex.glsl", "src/shaders/fragment.glsl");
-
-  unsigned int container = Texture::loadTextureRGB("assets/container.jpg", 0);
-  unsigned int awesomeface = Texture::loadTextureRGBA("assets/awesomeface.png", 1);
+  Shader shaderProgram("src/shaders/color.vert", "src/shaders/color.frag");
 
   Cube cube = Cube::create(shaderProgram.ID);
-  Cube cube2 = Cube::create(shaderProgram.ID);
-  Cubes[0].texture1 = container;
-  Cubes[0].texture2 = awesomeface;
-  Cubes[1].texture1 = container;
-  Cubes[1].texture2 = awesomeface;
+  
+  glm::vec3 lightPos = glm::vec3(3.0f, 1.0f, 1.5f);
 
-  shaderProgram.use(); // Set active shader before setting uniforms
-
-  shaderProgram.setInt("texture1", 0);
-  shaderProgram.setInt("texture2", 1);
-
-  Cubes[1].pos.x = 1.0f;
+  shaderProgram.use();
+  shaderProgram.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+  shaderProgram.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
+  shaderProgram.setVec3("lightPos", lightPos);
 
   Camera camera;
 

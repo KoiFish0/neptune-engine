@@ -302,46 +302,46 @@ public:
   static Cube create(unsigned int shaderProgram) {
     
     // This monstrocity contains the vertex info for a cube
- 
+
     std::vector<float> vertices = {
-      // Position           // Color           // Texture Coords
-      // Front face
-      -0.5f, -0.5f,  0.5f,   1, 0, 0,          0.0f, 0.0f,
-      0.5f, -0.5f,  0.5f,   0, 1, 0,          1.0f, 0.0f,
-      0.5f,  0.5f,  0.5f,   0, 0, 1,          1.0f, 1.0f,
-      -0.5f,  0.5f,  0.5f,   1, 1, 0,          0.0f, 1.0f,
+        // Position           // Normal           // TexCoords
+        // Front face (+Z)
+        -0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 1.0f,
 
-      // Back face
-      -0.5f, -0.5f, -0.5f,   1, 0, 1,          1.0f, 0.0f,
-      0.5f, -0.5f, -0.5f,   0, 1, 1,          0.0f, 0.0f,
-      0.5f,  0.5f, -0.5f,   1, 1, 1,          0.0f, 1.0f,
-      -0.5f,  0.5f, -0.5f,   0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        // Back face (-Z)
+        -0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 1.0f,
 
-      // Left face
-      -0.5f, -0.5f, -0.5f,   1, 0, 1,          0.0f, 0.0f,
-      -0.5f, -0.5f,  0.5f,   0, 1, 1,          1.0f, 0.0f,
-      -0.5f,  0.5f,  0.5f,   1, 1, 1,          1.0f, 1.0f,
-      -0.5f,  0.5f, -0.5f,   0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        // Left face (-X)
+        -0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
 
-      // Right face
-      0.5f, -0.5f,  0.5f,   1, 0, 1,          0.0f, 0.0f,
-      0.5f, -0.5f, -0.5f,   0, 1, 1,          1.0f, 0.0f,
-      0.5f,  0.5f, -0.5f,   1, 1, 1,          1.0f, 1.0f,
-      0.5f,  0.5f,  0.5f,   0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        // Right face (+X)
+         0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
 
-      // Top face
-      -0.5f,  0.5f,  0.5f,   1, 0, 0,          0.0f, 0.0f,
-      0.5f,  0.5f,  0.5f,   0, 1, 0,          1.0f, 0.0f,
-      0.5f,  0.5f, -0.5f,   0, 0, 1,          1.0f, 1.0f,
-      -0.5f,  0.5f, -0.5f,   1, 1, 0,          0.0f, 1.0f,
+        // Top face (+Y)
+        -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 1.0f,
 
-      // Bottom face
-      -0.5f, -0.5f, -0.5f,   1, 0, 1,          0.0f, 0.0f,
-      0.5f, -0.5f, -0.5f,   0, 1, 1,          1.0f, 0.0f,
-      0.5f, -0.5f,  0.5f,   1, 1, 1,          1.0f, 1.0f,
-      -0.5f, -0.5f,  0.5f,   0.5f, 0.5f, 0.5f, 0.0f, 1.0f
+        // Bottom face (-Y)
+        -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 1.0f
     };
-
+ 
     std::vector<unsigned int> indices = {
       // Front face
       0, 1, 2,  2, 3, 0,
@@ -375,7 +375,7 @@ public:
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
-    // color attribute
+    // normal attribute
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3* sizeof(float)));
     glEnableVertexAttribArray(1);
     // texture attribute
@@ -422,15 +422,16 @@ public:
     
     // Create a perspective projection matrix
     glm::mat4 projection = activeCamera.getProjectionMatrix();
-    
-    /* Matrix multiplication is non-commutative
-     * so it must be multiplied in this order.
-     * */
 
-    glm::mat4 mvp = projection * view * model;
+    // Send the matrices to the shader
+    int modelLoc = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-    int mvpLoc = glGetUniformLocation(shaderProgram, "mvp");
-    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvp));
+    int viewLoc = glGetUniformLocation(shaderProgram, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+    int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

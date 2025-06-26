@@ -41,9 +41,13 @@ int main(void) {
   unsigned int container = Texture::loadTextureRGB("assets/container.jpg", 0);
   unsigned int awesomeface = Texture::loadTextureRGBA("assets/awesomeface.png", 1);
 
-  TextureRect3D square = TextureRect3D::create(vertices, indices, shaderProgram.ID); 
-  square.texture1 = container;
-  square.texture2 = awesomeface;
+//  TextureRect3D square = TextureRect3D::create(vertices, indices, shaderProgram.ID); 
+//  square.texture1 = container;
+//  square.texture2 = awesomeface;
+  
+  Cube cube = Cube::create(shaderProgram.ID);
+  cube.texture1 = container;
+  cube.texture2 = awesomeface;
 
   shaderProgram.use(); // Set active shader before setting uniforms
 
@@ -58,7 +62,7 @@ int main(void) {
       glm::vec3(0.0f, 1.0f, 0.0f),
       glm::radians(70.0f),           
       16.0f / 9.0f,                  
-      0.1f,                          
+      0.025f,                          
       100.0f                         
   );
   

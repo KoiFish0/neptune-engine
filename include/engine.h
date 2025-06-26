@@ -33,6 +33,10 @@ private:
     for (TextureRect3D& TextureRect3D : TextureRect3Ds) {
       TextureRect3D.draw();
     }
+
+    for (Cube& Cube : Cubes) {
+      Cube.draw();
+    }
   }
 
 public:

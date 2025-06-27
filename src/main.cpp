@@ -35,6 +35,15 @@ int main(void) {
   glm::vec3 lightPos = glm::vec3(3.0f, 1.0f, 1.5f);
 
   shaderProgram.use();
+  shaderProgram.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+  shaderProgram.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+  shaderProgram.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+  shaderProgram.setFloat("material.shininess", 32.0f);
+
+  shaderProgram.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
+  shaderProgram.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+  shaderProgram.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
+
   shaderProgram.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
   shaderProgram.setVec3("lightColor",  0.8f, 0.8f, 0.8f);
   shaderProgram.setVec3("lightPos", lightPos);
@@ -68,6 +77,7 @@ int main(void) {
   // Main loop
   while (!glfwWindowShouldClose(window)) {
     shaderProgram.setVec3("viewPos", activeCamera.position); 
+    shaderProgram.setVec3("lightPos", glm::vec3(sin(glfwGetTime()), 1.5f, -cos(glfwGetTime())));
     double deltaX = Input::getMouseX() - lastX;
     double deltaY = lastY - Input::getMouseY();
     

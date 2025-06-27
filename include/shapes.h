@@ -254,7 +254,7 @@ public:
 
     // Build the transformation matrix
     glm::mat4 identity = glm::mat4(1.0f); // identity matrix 
-    
+
     // Apply translation
     glm::mat4 model = glm::translate(identity, pos); 
 
@@ -262,16 +262,16 @@ public:
     model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0)); 
     model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0)); 
     model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1)); 
-    
+
     // Apply scale on top of translation and rotation
     model = glm::scale(model, scale); 
-    
+
     // Create the view matrix
     glm::mat4 view = activeCamera.getViewMatrix();
-    
+
     // Create a perspective projection matrix
     glm::mat4 projection = activeCamera.getProjectionMatrix();
-    
+
     /* Matrix multiplication is non-commutative
      * so it must be multiplied in this order.
      * */
@@ -295,53 +295,74 @@ public:
   glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+  int id; // Identifier for the cube
   unsigned int shaderProgram;
   unsigned int texture1;
   unsigned int texture2;
 
+  // Keep track of which uniforms to use when using
+  // a premade shader program.
+
+  bool isFlatColor;
+  bool isPhongShadedColor;    
+  struct Material {
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+    float shininess;
+  }; 
+
+  struct Light {
+    glm::vec3 position;
+
+    glm::vec3 ambient;
+    glm::vec3 diffuse;
+    glm::vec3 specular;
+  };
+
   static Cube create(unsigned int shaderProgram) {
-    
+
     // This monstrocity contains the vertex info for a cube
 
     std::vector<float> vertices = {
-        // Position           // Normal           // TexCoords
-        // Front face (+Z)
-        -0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 1.0f,
+      // Position           // Normal           // TexCoords
+      // Front face (+Z)
+      -0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   1.0f, 1.0f,
+      -0.5f,  0.5f,  0.5f,   0.0f,  0.0f,  1.0f,   0.0f, 1.0f,
 
-        // Back face (-Z)
-        -0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 1.0f,
+      // Back face (-Z)
+      -0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 0.0f,
+      0.5f, -0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   0.0f, 1.0f,
+      -0.5f,  0.5f, -0.5f,   0.0f,  0.0f, -1.0f,   1.0f, 1.0f,
 
-        // Left face (-X)
-        -0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
+      // Left face (-X)
+      -0.5f, -0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+      -0.5f, -0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
+      -0.5f,  0.5f,  0.5f,  -1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+      -0.5f,  0.5f, -0.5f,  -1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
 
-        // Right face (+X)
-         0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
+      // Right face (+X)
+      0.5f, -0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,   1.0f,  0.0f,  0.0f,   1.0f, 1.0f,
+      0.5f,  0.5f,  0.5f,   1.0f,  0.0f,  0.0f,   0.0f, 1.0f,
 
-        // Top face (+Y)
-        -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 1.0f,
+      // Top face (+Y)
+      -0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 0.0f,
+      0.5f,  0.5f,  0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 0.0f,
+      0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   1.0f, 1.0f,
+      -0.5f,  0.5f, -0.5f,   0.0f,  1.0f,  0.0f,   0.0f, 1.0f,
 
-        // Bottom face (-Y)
-        -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 1.0f
+      // Bottom face (-Y)
+      -0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 0.0f,
+      0.5f, -0.5f, -0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 0.0f,
+      0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   1.0f, 1.0f,
+      -0.5f, -0.5f,  0.5f,   0.0f, -1.0f,  0.0f,   0.0f, 1.0f
     };
- 
+
     std::vector<unsigned int> indices = {
       // Front face
       0, 1, 2,  2, 3, 0,
@@ -386,6 +407,7 @@ public:
     cube.VAO = VAO;
     cube.VBO = VBO;
     cube.shaderProgram = shaderProgram;
+    cube.id = Cubes.size() + 1;
 
     Cubes.push_back(cube);
     return cube;
@@ -405,7 +427,7 @@ public:
 
     // Build the transformation matrix
     glm::mat4 identity = glm::mat4(1.0f); // identity matrix 
-    
+
     // Apply translation
     glm::mat4 model = glm::translate(identity, pos); 
 
@@ -413,13 +435,13 @@ public:
     model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0)); 
     model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0)); 
     model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1)); 
-    
+
     // Apply scale on top of translation and rotation
     model = glm::scale(model, scale); 
-    
+
     // Create the view matrix
     glm::mat4 view = activeCamera.getViewMatrix();
-    
+
     // Create a perspective projection matrix
     glm::mat4 projection = activeCamera.getProjectionMatrix();
 

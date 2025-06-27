@@ -27,12 +27,16 @@ int main(void) {
   Shader shaderProgram("src/shaders/color.vert", "src/shaders/color.frag");
 
   Cube cube = Cube::create(shaderProgram.ID);
+  Cube cube2 = Cube::create(shaderProgram.ID);
+
+  Cubes[1].pos.x = 1.5f;
+  Cubes[1].pos.z = -1.5f;
   
   glm::vec3 lightPos = glm::vec3(3.0f, 1.0f, 1.5f);
 
   shaderProgram.use();
   shaderProgram.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-  shaderProgram.setVec3("lightColor",  1.0f, 1.0f, 1.0f);
+  shaderProgram.setVec3("lightColor",  0.8f, 0.8f, 0.8f);
   shaderProgram.setVec3("lightPos", lightPos);
 
   Camera camera;
@@ -63,6 +67,7 @@ int main(void) {
 
   // Main loop
   while (!glfwWindowShouldClose(window)) {
+    shaderProgram.setVec3("viewPos", activeCamera.position); 
     double deltaX = Input::getMouseX() - lastX;
     double deltaY = lastY - Input::getMouseY();
     
@@ -117,6 +122,9 @@ int main(void) {
     if (Input::getKeyDown(GLFW_KEY_LEFT_SHIFT)) {
       activeCamera.position.y -= speed * delta;
     }
+
+    printf("%f\n", 1 / delta);
+
     Engine::refresh();
   }
 

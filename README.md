@@ -26,7 +26,7 @@ To use this engine, it's recommended to have:
  - C/C++ Compiler (gcc, clang, etc.)
      - Needed to compile the code
  - CMake
-     - An alternative method of compiling
+     - Makes compiling a bit easier
     
 
 ## Getting Started

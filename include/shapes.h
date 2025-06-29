@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 
+#include "shader.h"
 #include "globals.h"
 
 // Compiler gets upset if you don't declare/define things in this order
@@ -295,30 +296,9 @@ public:
   glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
-  int id; // Identifier for the cube
   unsigned int shaderProgram;
   unsigned int texture1;
   unsigned int texture2;
-
-  // Keep track of which uniforms to use when using
-  // a premade shader program.
-
-  bool isFlatColor;
-  bool isPhongShadedColor;    
-  struct Material {
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-    float shininess;
-  }; 
-
-  struct Light {
-    glm::vec3 position;
-
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-  };
 
   static Cube create(unsigned int shaderProgram) {
 
@@ -407,7 +387,6 @@ public:
     cube.VAO = VAO;
     cube.VBO = VBO;
     cube.shaderProgram = shaderProgram;
-    cube.id = Cubes.size() + 1;
 
     Cubes.push_back(cube);
     return cube;

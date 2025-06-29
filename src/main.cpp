@@ -24,7 +24,7 @@ int main(void) {
 //  Engine::wireframeView(true);
 
   // Load and create a shader program from a file
-  Shader shaderProgram("src/shaders/color.vert", "src/shaders/color.frag");
+  Shader shaderProgram("src/shaders/presets/phongSolid.vert", "src/shaders/presets/phongSolid.frag");
 
   Cube cube = Cube::create(shaderProgram.ID);
   Cube cube2 = Cube::create(shaderProgram.ID);

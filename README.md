@@ -1,11 +1,6 @@
-
 <div align="center">
     <h1>Neptune</h1>
 </div>
-
-<p align="center">
- <img src="images/neptune-engine.png" width="15%">
-</p>
 
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/t/KoiFish0/neptune-engine) ![GitHub last commit](https://img.shields.io/github/last-commit/KoiFish0/neptune-engine)
 

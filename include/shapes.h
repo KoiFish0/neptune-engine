@@ -10,9 +10,6 @@
 
 #include <vector>
 
-#include <stdio.h>
-
-#include "shader.h"
 #include "globals.h"
 
 // Compiler gets upset if you don't declare/define things in this order
@@ -395,12 +392,11 @@ public:
   void draw() {
     glUseProgram(shaderProgram);
 
-    if (texture1 || texture2) {
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, texture1);
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, texture2);
-    }
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, texture2);
 
     float aspect = static_cast<float>(width) / static_cast<float>(height);
 

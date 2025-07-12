@@ -9,8 +9,6 @@
 #include <sstream>
 #include <iostream>
 
-#include "shapes.h"
-
 // Part of the below shader class is from: https://learnopengl.com/Getting-started/Shaders
 class Shader {
 public:

@@ -1,9 +1,6 @@
 /* MAIN.CPP
  *
- * This is a file for testing the
- * engine as it is developed. It
- * should serve as a good sample 
- * file for the latest features.
+ * A little testing file. Somewhat of a sample file.
  *
  * */
 
@@ -14,34 +11,40 @@ int width = 2560;
 int height = 1440;
 
 int main(void) {
-  // Initialize Neptune
   Engine::initialize();
 
-  // Create a window
   Engine::createWindow(width, height, "Test");
   glClearColor(0.25f, 0.25f, 0.35f, 1.0f);
 
 //  Engine::wireframeView(true);
 
   // Load and create a shader program from a file
-  Shader shaderProgram("src/shaders/presets/phongSolid.vert", "src/shaders/presets/phongSolid.frag");
+  Shader shaderProgram("src/shaders/presets/phongTexture.vert", "src/shaders/presets/phongTexture.frag");
+
+  unsigned int container = Texture::loadTextureRGBA("assets/container2.png", 0);
 
   Cube cube = Cube::create(shaderProgram.ID);
   Cube cube2 = Cube::create(shaderProgram.ID);
 
+  cube.texture1 = container;
+  cube2.texture1 = container;
+
   Cubes[1].pos.x = 1.5f;
   Cubes[1].pos.z = -1.5f;
   
+  // Set texture uniform
+  glUniform1i(glGetUniformLocation(shaderProgram.ID, "material.diffuse"), 0);
+
   glm::vec3 lightPos = glm::vec3(3.0f, 1.0f, 1.5f);
 
   shaderProgram.use();
   shaderProgram.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-  shaderProgram.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+//  shaderProgram.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
   shaderProgram.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
   shaderProgram.setFloat("material.shininess", 32.0f);
 
   shaderProgram.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
-  shaderProgram.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f); // darken diffuse light a bit
+  shaderProgram.setVec3("light.diffuse",  0.5f, 0.5f, 0.5f);
   shaderProgram.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
 
   shaderProgram.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
@@ -133,7 +136,8 @@ int main(void) {
       activeCamera.position.y -= speed * delta;
     }
 
-    printf("%f\n", 1 / delta);
+    // FPS
+    //printf("%f\n", 1 / delta);
 
     Engine::refresh();
   }

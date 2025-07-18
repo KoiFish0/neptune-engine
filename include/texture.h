@@ -36,7 +36,7 @@ public:
     return textureRGB;
   }
 
-static unsigned int loadTextureRGBA(const char *path, int slot) {
+  static unsigned int loadTextureRGBA(const char *path, int slot) {
     unsigned int textureRGBA;
     glGenTextures(1, &textureRGBA);
     glActiveTexture(GL_TEXTURE0 + slot);
@@ -53,18 +53,19 @@ static unsigned int loadTextureRGBA(const char *path, int slot) {
     stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, STBI_rgb_alpha);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+      glGenerateMipmap(GL_TEXTURE_2D);
+      std::cout << "Loaded texture: " << path << " (ID: " << textureRGBA << ")" << std::endl;
     } else {
-        std::cout << "Failed to load texture: " << path << " (" << stbi_failure_reason() << ")" << std::endl;
+      std::cout << "Failed to load texture: " << path << " (" << stbi_failure_reason() << ")" << std::endl;
     }
     stbi_image_free(data);
 
     // Check OpenGL errors
     while (GLenum error = glGetError()) {
-        std::cout << "OpenGL Error in loadTextureRGBA: " << error << std::endl;
+      std::cout << "OpenGL Error in loadTextureRGBA: " << error << std::endl;
     }
 
     return textureRGBA;
-}
+  }
 };

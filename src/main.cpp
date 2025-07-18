@@ -14,33 +14,43 @@ int main(void) {
   Engine::initialize();
 
   Engine::createWindow(width, height, "Test");
-  glClearColor(0.25f, 0.25f, 0.35f, 1.0f);
+
+  // Background
+  glClearColor(0.25f * 0.5f, 0.25f * 0.5f, 0.35f * 0.5f, 1.0f);
 
 //  Engine::wireframeView(true);
 
   // Load and create a shader program from a file
-  Shader shaderProgram("src/shaders/presets/phongTexture.vert", "src/shaders/presets/phongTexture.frag");
+  Shader shaderProgram("src/shaders/presets/phongTextureSpecMap.vert", "src/shaders/presets/phongTextureSpecMap.frag");
 
-  unsigned int container = Texture::loadTextureRGBA("assets/container2.png", 0);
+  unsigned int diffuse = Texture::loadTextureRGBA("assets/container2.png", 1);
+  unsigned int specMap = Texture::loadTextureRGBA("assets/container2_specular.png", 0);
 
   Cube cube = Cube::create(shaderProgram.ID);
   Cube cube2 = Cube::create(shaderProgram.ID);
 
-  cube.texture1 = container;
-  cube2.texture1 = container;
+  // Assign textures to be used in the draw call of the corresponding cube
+  Cubes[0].texture1 = diffuse;
+  Cubes[1].texture1 = diffuse;
+  Cubes[0].texture2 = specMap;
+  Cubes[1].texture2 = specMap;
 
   Cubes[1].pos.x = 1.5f;
   Cubes[1].pos.z = -1.5f;
   
-  // Set texture uniform
-  glUniform1i(glGetUniformLocation(shaderProgram.ID, "material.diffuse"), 0);
-
   glm::vec3 lightPos = glm::vec3(3.0f, 1.0f, 1.5f);
 
+  // Set active shader before modifying uniforms
+  // TODO Handle it under the hood
   shaderProgram.use();
+
+  // Set texture uniform
+  shaderProgram.setInt("material.diffuse", 1);
+  shaderProgram.setInt("material.specular", 0);
+
   shaderProgram.setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
 //  shaderProgram.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-  shaderProgram.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+//  shaderProgram.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
   shaderProgram.setFloat("material.shininess", 32.0f);
 
   shaderProgram.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
@@ -80,7 +90,6 @@ int main(void) {
   // Main loop
   while (!glfwWindowShouldClose(window)) {
     shaderProgram.setVec3("viewPos", activeCamera.position); 
-    shaderProgram.setVec3("lightPos", glm::vec3(sin(glfwGetTime()), 1.5f, -cos(glfwGetTime())));
     double deltaX = Input::getMouseX() - lastX;
     double deltaY = lastY - Input::getMouseY();
     

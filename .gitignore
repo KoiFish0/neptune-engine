@@ -3,6 +3,7 @@ build/
 assets/
 sample/
 old/
+.cache/
 
 # File types
 *.bin
@@ -13,3 +14,4 @@ CMakeLists.txt
 compile_commands.json
 build.sh
 main
+stringConverter.py

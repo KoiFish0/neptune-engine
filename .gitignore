@@ -3,10 +3,8 @@ build/
 assets/
 sample/
 old/
+dev_utils/
 .cache/
-
-# File types
-*.bin
 
 # Files
 todo.md
@@ -14,4 +12,3 @@ CMakeLists.txt
 compile_commands.json
 build.sh
 main
-stringConverter.py

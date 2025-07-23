@@ -35,7 +35,7 @@ int main(void) {
     glm::vec3(-1.3f,  1.0f, -1.5f)
   };
 
-  Shader shaderProgram("src/shaders/presets/phongTextureSpecMapPoint.vert", "src/shaders/presets/phongTextureSpecMapPoint.frag");
+  Shader shaderProgram("src/shaders/presets/phongTextureSpecMap.vert", "src/shaders/presets/phongTextureSpecMap.frag");
 
   unsigned int specMap = Texture::loadTextureRGBA("assets/container2_specular.png", 0);
   unsigned int diffuse = Texture::loadTextureRGBA("assets/container2.png", 1);
@@ -69,28 +69,27 @@ int main(void) {
   // TODO Handle it under the hood
   shaderProgram.use();
 
-  // Set texture uniform
   shaderProgram.setInt("material.specular", 0);
   shaderProgram.setInt("material.diffuse", 1);
 
-  shaderProgram.setVec3("material.ambient", 1.0f * 0.5f, 0.5f * 0.5f, 0.31f * 0.5f);
-//  shaderProgram.setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-//  shaderProgram.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
   shaderProgram.setFloat("material.shininess", 32.0f);
 
-  shaderProgram.setVec3("light.ambient",  0.2f, 0.2f, 0.2f);
-  shaderProgram.setVec3("light.diffuse",  0.8f, 0.8f, 0.8f);
-  shaderProgram.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
+  shaderProgram.setVec3("pointLights[0].ambient",  0.2f, 0.2f, 0.2f);
+  shaderProgram.setVec3("pointLights[0].diffuse",  0.8f, 0.8f, 0.8f);
+  shaderProgram.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f); 
 
-  shaderProgram.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
-  shaderProgram.setVec3("lightColor",  0.8f, 0.8f, 0.8f);
-//  shaderProgram.setVec3("light.direction", -0.2f, -1.0f, -0.3f); 	
+  shaderProgram.setFloat("pointLights[0].constant",  1.0f);
+  shaderProgram.setFloat("pointLights[0].linear",    0.09f);
+  shaderProgram.setFloat("pointLights[0].quadratic", 0.032f);	
 
-  shaderProgram.setFloat("light.constant",  1.0f);
-  shaderProgram.setFloat("light.linear",    0.09f);
-  shaderProgram.setFloat("light.quadratic", 0.032f);	
+  shaderProgram.setVec3("pointLights[0].position", lightPos); 
 
-  shaderProgram.setVec3("light.position", lightPos); 
+  // Dir light
+  shaderProgram.setVec3("dirLight.ambient",  0.2f, 0.2f, 0.2f);
+  shaderProgram.setVec3("dirLight.diffuse",  0.8f, 0.8f, 0.8f);
+  shaderProgram.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f); 
+
+  shaderProgram.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f); 	
 
   Camera camera;
 
@@ -108,7 +107,7 @@ int main(void) {
   activeCamera = camera;
 
   // Define movement speed
-  float speed = 3.0f;
+  float speed = 7.0f;
 
   double lastX = Input::getMouseX();
   double lastY = Input::getMouseY();

@@ -12,7 +12,7 @@ A header-only low-level 3D game engine programmed and programmable in C++. No fa
 
 To use this engine, it's recommended to have these skills:
  - C++ Programming
- - Graphical Programming
+ - Graphics Programming
 
 ## Dependencies
  - git (Optional)

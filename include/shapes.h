@@ -1,6 +1,7 @@
 #ifndef SHAPES_H
 #define SHAPES_H
 
+#include <GL/gl.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -23,11 +24,7 @@ std::vector<Triangle2D> triangle2Ds;
 std::vector<ColorRect2D> ColorRect2Ds;
 std::vector<TextureRect2D> TextureRect2Ds;
 std::vector<TextureRect3D> TextureRect3Ds;
-std::vector<Cube> Cubes;
-
-//
-// Triangle2D
-//
+std::vector<Cube*> Cubes;
 
 class Triangle2D {
 private:
@@ -72,10 +69,6 @@ public:
     glDrawArrays(GL_TRIANGLES, 0, 3);
   }
 };
-
-//
-// ColorRect2D
-//
 
 // Untested, may not work
 class ColorRect2D {
@@ -294,10 +287,13 @@ public:
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
   unsigned int shaderProgram;
+  // TODO Vector storing enabled textures
+  std::vector<unsigned int> textures;
+
   unsigned int texture1;
   unsigned int texture2;
 
-  static Cube create(unsigned int shaderProgram) {
+  static Cube* create(unsigned int shaderProgram) {
 
     // This monstrocity contains the vertex info for a cube
 
@@ -379,10 +375,10 @@ public:
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);  
 
-    Cube cube;
-    cube.VAO = VAO;
-    cube.VBO = VBO;
-    cube.shaderProgram = shaderProgram;
+    Cube* cube = new Cube;
+    cube->VAO = VAO;
+    cube->VBO = VBO;
+    cube->shaderProgram = shaderProgram;
 
     Cubes.push_back(cube);
     return cube;
@@ -391,11 +387,10 @@ public:
   void draw() {
     glUseProgram(shaderProgram);
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-
-    glActiveTexture(GL_TEXTURE2);
-    glBindTexture(GL_TEXTURE_2D, texture2);
+    for (int i = 0; i < textures.size(); ++i) {
+      glActiveTexture(GL_TEXTURE1 + textures[i]);
+      glBindTexture(GL_TEXTURE_2D, textures[i]);
+    }
 
     float aspect = static_cast<float>(width) / static_cast<float>(height);
 

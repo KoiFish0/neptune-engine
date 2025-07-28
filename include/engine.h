@@ -11,6 +11,7 @@
 #include "camera.h"
 #include "globals.h"
 #include "texture.h"
+#include "model.h"
 
 GLFWwindow* window;
 
@@ -34,8 +35,8 @@ private:
       TextureRect3D.draw();
     }
 
-    for (Cube& Cube : Cubes) {
-      Cube.draw();
+    for (Cube* Cube : Cubes) {
+      Cube->draw();
     }
   }
 

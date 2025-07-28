@@ -35,7 +35,7 @@ uniform vec3 viewPos;
 uniform Material material;
 
 // TODO Specify multiple point lights
-#define NR_POINT_LIGHTS 1  
+#define NR_POINT_LIGHTS 3  
 uniform PointLight pointLights[NR_POINT_LIGHTS];
 uniform DirLight dirLight;
 

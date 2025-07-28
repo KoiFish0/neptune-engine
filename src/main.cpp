@@ -16,7 +16,7 @@ int main(void) {
   Engine::createWindow(width, height, "Test");
 
   // Background
-  glClearColor(0.25f * 0.5f, 0.25f * 0.5f, 0.35f * 0.5f, 1.0f);
+//  glClearColor(0.25f * 0.5f, 0.25f * 0.5f, 0.35f * 0.5f, 1.0f);
 
 //  Engine::wireframeView(true);
 
@@ -40,33 +40,18 @@ int main(void) {
   unsigned int specMap = Texture::loadTextureRGBA("assets/container2_specular.png", 0);
   unsigned int diffuse = Texture::loadTextureRGBA("assets/container2.png", 1);
 
-//  Cube cube = Cube::create(shaderProgram.ID);
-//  Cube cube2 = Cube::create(shaderProgram.ID);
-
   for(unsigned int i = 0; i < 10; i++) {
-    Cube randomCube = Cube::create(shaderProgram.ID);
-    Cubes[i].pos = cubePositions[i];
+    Cube* randomCube = Cube::create(shaderProgram.ID);
+    randomCube->pos = cubePositions[i];
     float angle = 20.0f * (i + 1);
-    Cubes[i].rotation = glm::vec3(angle, angle, angle);
-    Cubes[i].texture1 = diffuse;
-    Cubes[i].texture2 = specMap;
+    randomCube->rotation = glm::vec3(angle, angle, angle);
+    randomCube->textures.push_back(diffuse);
+    randomCube->textures.push_back(specMap);
   }
 
-  // Assign textures to be used in the draw call of the corresponding cube
-//  Cubes[0].texture1 = diffuse;
-//  Cubes[1].texture1 = diffuse;
-//  Cubes[0].texture2 = specMap;
-//  Cubes[1].texture2 = specMap;
-//
-//  Cubes[1].pos.x = 1.5f;
-//  Cubes[1].pos.z = -1.5f;
-//
-//  Cubes[1].rotation.z = 40.0f;
-  
   glm::vec3 lightPos = glm::vec3(0.0f, 1.5f, 0.0f);
 
   // Set active shader before modifying uniforms
-  // TODO Handle it under the hood
   shaderProgram.use();
 
   shaderProgram.setInt("material.specular", 0);
@@ -74,20 +59,43 @@ int main(void) {
 
   shaderProgram.setFloat("material.shininess", 32.0f);
 
+  // Point Light 1
   shaderProgram.setVec3("pointLights[0].ambient",  0.2f, 0.2f, 0.2f);
-  shaderProgram.setVec3("pointLights[0].diffuse",  0.8f, 0.8f, 0.8f);
-  shaderProgram.setVec3("pointLights[0].specular", 1.0f, 1.0f, 1.0f); 
+  shaderProgram.setVec3("pointLights[0].diffuse",  0.4f, 0.0f, 1.0f);
+  shaderProgram.setVec3("pointLights[0].specular", 0.4f, 0.0f, 1.0f); 
 
   shaderProgram.setFloat("pointLights[0].constant",  1.0f);
   shaderProgram.setFloat("pointLights[0].linear",    0.09f);
   shaderProgram.setFloat("pointLights[0].quadratic", 0.032f);	
 
-  shaderProgram.setVec3("pointLights[0].position", lightPos); 
+  shaderProgram.setVec3("pointLights[0].position", 0.0f, 1.5f, 5.0f); 
+
+  // Point Light 2
+  shaderProgram.setVec3("pointLights[1].ambient",  0.2f, 0.2f, 0.2f);
+  shaderProgram.setVec3("pointLights[1].diffuse",  1.0f, 0.0f, 0.0f);
+  shaderProgram.setVec3("pointLights[1].specular", 1.0f, 0.0f, 0.0f); 
+
+  shaderProgram.setFloat("pointLights[1].constant",  1.0f);
+  shaderProgram.setFloat("pointLights[1].linear",    0.09f);
+  shaderProgram.setFloat("pointLights[1].quadratic", 0.032f);	
+
+  shaderProgram.setVec3("pointLights[1].position", 0.0f, 1.5f, -10.0f); 
+
+  // Point Light 3
+  shaderProgram.setVec3("pointLights[2].ambient",  0.2f, 0.2f, 0.2f);
+  shaderProgram.setVec3("pointLights[2].diffuse",  1.0f, 1.0f, 1.0f);
+  shaderProgram.setVec3("pointLights[2].specular", 1.0f, 1.0f, 1.0f); 
+
+  shaderProgram.setFloat("pointLights[2].constant",  1.0f);
+  shaderProgram.setFloat("pointLights[2].linear",    0.09f);
+  shaderProgram.setFloat("pointLights[2].quadratic", 0.032f);	
+
+  shaderProgram.setVec3("pointLights[2].position", 0.0f, 0.0f, -10.0f); 
 
   // Dir light
-  shaderProgram.setVec3("dirLight.ambient",  0.2f, 0.2f, 0.2f);
-  shaderProgram.setVec3("dirLight.diffuse",  0.8f, 0.8f, 0.8f);
-  shaderProgram.setVec3("dirLight.specular", 1.0f, 1.0f, 1.0f); 
+  shaderProgram.setVec3("dirLight.ambient",  0.0f, 0.0f, 0.0f);
+  shaderProgram.setVec3("dirLight.diffuse",  0.0f, 0.0f, 0.0f);
+  shaderProgram.setVec3("dirLight.specular", 0.0f, 0.0f, 0.0f); 
 
   shaderProgram.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f); 	
 
@@ -114,7 +122,8 @@ int main(void) {
 
   float sensitivity = 0.15f;
 
-  float yaw = -90.0f; // Forward
+  // Initial look vector
+  float yaw = -90.0f;
   float pitch = 0.0f;
 
   // Main loop

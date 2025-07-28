@@ -19,22 +19,6 @@ class Engine {
 private:
 
   static void draw() {
-    for (Triangle2D& triangle2D : triangle2Ds) {
-      triangle2D.draw();
-    }
-
-    for (ColorRect2D& ColorRect2D : ColorRect2Ds) {
-      ColorRect2D.draw();
-    }
-
-    for (TextureRect2D& TextureRect2D : TextureRect2Ds) {
-      TextureRect2D.draw();
-    }
-
-    for (TextureRect3D& TextureRect3D : TextureRect3Ds) {
-      TextureRect3D.draw();
-    }
-
     for (Cube* Cube : Cubes) {
       Cube->draw();
     }

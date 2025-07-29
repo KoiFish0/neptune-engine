@@ -90,6 +90,6 @@ public:
 
 };
 
-Camera activeCamera;
+Camera activeCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.0f);
 
 #endif // ENGINE_H

@@ -12,15 +12,9 @@ int height = 1440;
 
 int main(void) {
   Engine::initialize();
+  debugPrint = true;
 
   Engine::createWindow(width, height, "Test");
-
-  // Background
-//  glClearColor(0.25f * 0.5f, 0.25f * 0.5f, 0.35f * 0.5f, 1.0f);
-
-//  Engine::wireframeView(true);
-
-  // Load and create a shader program from a file
 
   glm::vec3 cubePositions[] = {
     glm::vec3( 0.0f,  0.0f,  0.0f),
@@ -48,8 +42,6 @@ int main(void) {
     randomCube->textures.push_back(diffuse);
     randomCube->textures.push_back(specMap);
   }
-
-  glm::vec3 lightPos = glm::vec3(0.0f, 1.5f, 0.0f);
 
   // Set active shader before modifying uniforms
   shaderProgram.use();
@@ -99,9 +91,7 @@ int main(void) {
 
   shaderProgram.setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f); 	
 
-  Camera camera;
-
-  camera = camera.create(
+  Camera camera(
       glm::vec3(0.0f, 0.0f, 2.0f),   
       glm::vec3(0.0f, 0.0f, -1.0f),  
       glm::vec3(0.0f, 1.0f, 0.0f),

@@ -1,3 +1,4 @@
+#include "globals.h"
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
@@ -6,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "stb_image/stb_image.h"
+#include "globals.h"
 
 class Texture {
 public:
@@ -55,7 +57,9 @@ public:
     if (data) {
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
       glGenerateMipmap(GL_TEXTURE_2D);
-      std::cout << "Loaded texture: " << path << " (ID: " << textureRGBA << ")" << std::endl;
+      if (debugPrint == true) {
+        std::cout << "Loaded texture: " << path << " (ID: " << textureRGBA << ")" << std::endl;
+      }
     } else {
       std::cout << "Failed to load texture: " << path << " (" << stbi_failure_reason() << ")" << std::endl;
     }

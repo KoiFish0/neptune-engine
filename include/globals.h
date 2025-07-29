@@ -15,6 +15,8 @@ extern GLFWwindow* window;
 // Current active camera; allows multiple cameras and swapping between them
 extern Camera activeCamera;
 
+// Whether to print debug info intended for development of the engine
+bool debugPrint;
 
 #endif
 

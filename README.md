@@ -37,10 +37,10 @@ From here, you can put your code in the src/ directory. You can use the included
 
 ## Documentation
 
-Documentation is available on the [wiki](https://github.com/KoiFish0/neptune-engine/wiki). The source code is also well commented if you want to see how the engine works.
+Documentation is available on the [wiki](https://github.com/KoiFish0/neptune-engine/wiki)
 
 > [!NOTE] 
-> This engine has only been verified to work on Linux but should work on Windows and MacOS provided it is compiled for the corresponding OS
+> This engine has only been tested on Linux but should work on Windows and MacOS provided it is compiled for the corresponding OS
 
 ## Mentions
 

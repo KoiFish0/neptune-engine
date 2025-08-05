@@ -1,10 +1,5 @@
-/* MAIN.CPP
- *
- * A little testing file. 
- *
- * */
+/* A file used for testing the engine */
 
-// Include the engine
 #include "engine.h"
 
 int width = 2560;
@@ -34,7 +29,7 @@ int main(void) {
   unsigned int specMap = Texture::loadTextureRGBA("assets/container2_specular.png", 0);
   unsigned int diffuse = Texture::loadTextureRGBA("assets/container2.png", 1);
 
-  for(unsigned int i = 0; i < 10; i++) {
+  for (unsigned int i = 0; i < 10; i++) {
     Cube* randomCube = Cube::create(shaderProgram.ID);
     randomCube->pos = cubePositions[i];
     float angle = 20.0f * (i + 1);
@@ -42,6 +37,64 @@ int main(void) {
     randomCube->textures.push_back(diffuse);
     randomCube->textures.push_back(specMap);
   }
+
+
+  std::vector<float> vertices = {
+    // Back face (-Z)
+    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f, // 0
+     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f, // 1
+     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f, // 2
+    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f, // 3
+
+    // Front face (+Z)
+    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f, // 4
+     0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f, // 5
+     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f, // 6
+    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f, // 7
+
+    // Left face (-X)
+    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  1.0f, // 8
+    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  0.0f,  0.0f, // 9
+    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  0.0f, // 10
+    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f, // 11
+
+    // Right face (+X)
+     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, // 12
+     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f, // 13
+     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f, // 14
+     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f, // 15
+
+    // Bottom face (-Y)
+    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f, // 16
+     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f, // 17
+     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f, // 18
+    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f, // 19
+
+    // Top face (+Y)
+    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f, // 20
+     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f, // 21
+     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f, // 22
+    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f  // 23
+  };
+
+  std::vector<unsigned int> indices = {
+    // Back face (-Z)
+    0, 1, 2,  2, 3, 0,
+    // Front face (+Z)
+    4, 5, 6,  6, 7, 4,
+    // Left face (-X)
+    8, 9, 10,  10, 11, 8,
+    // Right face (+X)
+    12, 13, 14,  14, 15, 12,
+    // Bottom face (-Y)
+    16, 17, 18,  18, 19, 16,
+    // Top face (+Y)
+    20, 21, 22,  22, 23, 20
+  };
+
+  Mesh* mesh = Mesh::create(vertices, indices, shaderProgram.ID);
+
+  mesh->pos = glm::vec3(0.0f, 0.0f, 2.0f);
 
   // Set active shader before modifying uniforms
   shaderProgram.use();
@@ -101,10 +154,8 @@ int main(void) {
       100.0f                         
   );
   
-  // Set active camera
   activeCamera = camera;
 
-  // Define movement speed
   float speed = 7.0f;
 
   double lastX = Input::getMouseX();
@@ -175,7 +226,6 @@ int main(void) {
       activeCamera.position.y -= speed * delta;
     }
 
-    // FPS
 //    printf("%f\n", 1 / delta);
 
     Engine::refresh();

@@ -9,7 +9,7 @@
 #include <sstream>
 #include <iostream>
 
-// Part of the below shader class is from: https://learnopengl.com/Getting-started/Shaders
+// Most of the below shader class is from: https://learnopengl.com/Getting-started/Shaders
 class Shader {
 public:
   unsigned int ID;

@@ -19,4 +19,3 @@ extern Camera activeCamera;
 bool debugPrint;
 
 #endif
-

@@ -1,7 +1,6 @@
 #ifndef SHAPES_H
 #define SHAPES_H
 
-#include <GL/gl.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -26,7 +25,6 @@ public:
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
   unsigned int shaderProgram;
-  // TODO Vector storing enabled textures
   std::vector<unsigned int> textures;
 
   static Cube* create(unsigned int shaderProgram) {

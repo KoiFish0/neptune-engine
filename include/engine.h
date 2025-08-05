@@ -22,6 +22,10 @@ private:
     for (Cube* Cube : Cubes) {
       Cube->draw();
     }
+
+    for (Mesh* Mesh : Meshes) {
+      Mesh->draw();
+    }
   }
 
 public:

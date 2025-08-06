@@ -24,6 +24,8 @@ To use this engine, it's recommended to have these skills:
  - GLFW (OpenGL wrapper) 
  - GLAD (OpenGL wrapper)
  - GLM (Math Library)
+ - STB Image (Loading images)
+ - ASSIMP (Loading models, Not fully implemented)
 
 ## Getting Started
 

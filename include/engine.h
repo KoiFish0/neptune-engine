@@ -19,6 +19,10 @@ class Engine {
 private:
 
   static void draw() {
+    /**
+     * TODO Bundle everything into a mesh class with for example, Cube class as
+     * a wrapper
+     */
     for (Cube* Cube : Cubes) {
       Cube->draw();
     }
@@ -26,57 +30,59 @@ private:
     for (Mesh* Mesh : Meshes) {
       Mesh->draw();
     }
+
+    for (SubdividedPlane* subdividedPlane : SubdividedPlanes) {
+      subdividedPlane->draw();
+    }
   }
 
 public:
   static int initialize() {
-    // Initialize GLFW
+    /* Initialize GLFW */
     if (!glfwInit())
       return -1;
 
-    // Initialize input 
+    /* Initialize input */
     Input::inputInit();
     return 0;
   }
 
   static GLFWwindow* createWindow(int width, int height, const char* title) {
-    // Create a windowed mode window and its OpenGL context 
+    /** 
+     * Create a windowed mode window and its OpenGL context 
+     * TODO Let the caller control window mode 
+     */
     window = glfwCreateWindow(width, height, title, NULL, NULL);
 
     if (!window) {
       glfwTerminate();
       printf("Failed to create window.");
-      // Return a handle to the window
       return window;
     }
 
-    // Make the window's context current 
     glfwMakeContextCurrent(window);
 
-    // Load OpenGL
     gladLoadGL();
     
-    // Handle draw order
+    /* Handle draw order */
     glEnable(GL_DEPTH_TEST);
 
-    // Capture the mouse and hide the cursor
+    /** 
+     * Capture the mouse and hide the cursor
+     * TODO Create an interface for setting these parameters at runtime
+     */
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    glfwSwapInterval(1); // Enable vsync
+    /* Enable vertical sync */
+    glfwSwapInterval(1);
 
     return window;
   }
 
   static void refresh() {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    // Register user inputs 
     Input::updateInputState(window);
-    
-    // Custom draw function for drawing primitives
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     draw(); 
-    
-    // Swap front and back buffers
     glfwSwapBuffers(window);
   }
 
@@ -85,11 +91,7 @@ public:
   }
 
   static void wireframeView(bool enabled) {
-    if (enabled) {
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    } else {
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
+    glPolygonMode(GL_FRONT_AND_BACK, enabled ? GL_LINE : GL_FILL);
   }
 
 };

@@ -162,4 +162,130 @@ public:
   }
 };
 
+class SubdividedPlane;
+
+std::vector<SubdividedPlane*> SubdividedPlanes;
+
+class SubdividedPlane {
+private:
+  unsigned int VAO, VBO;
+
+public:
+  glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+  unsigned int shaderProgram;
+  std::vector<unsigned int> textures;
+  std::vector<unsigned int> indices;
+
+  static SubdividedPlane* create(int subdivisions, unsigned int shaderProgram) {
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+
+    const float planeWidth = 10.0f;
+    const float planeHeight = 10.0f;
+
+    /* Vertices */
+    for (unsigned i = 0; i <= subdivisions; i++) {
+      for (unsigned j = 0; j <= subdivisions; j++) {
+        // Vertex 0: Bottom-left
+        vertices.push_back(-planeWidth / 2.0f + planeWidth * i / (float)subdivisions); // v.x
+        vertices.push_back(0.0f); // v.y
+        vertices.push_back(-planeHeight / 2.0f + planeHeight * j / (float)subdivisions); // v.z
+        vertices.push_back(i / (float)subdivisions); // u
+        vertices.push_back(j / (float)subdivisions); // v
+      }
+    }
+
+    /* Indices */
+    for (unsigned i = 0; i < subdivisions; i++) {
+      for (unsigned j = 0; j < subdivisions; j++) {
+        unsigned baseIndex = i * (subdivisions + 1) + j;
+
+        indices.push_back(baseIndex); /* bottom-left */
+        indices.push_back(baseIndex + 1); /* bottom-right */
+        indices.push_back(baseIndex + (subdivisions + 1)); /* top-left */
+
+        indices.push_back(baseIndex + 1); /* bottom-right */
+        indices.push_back(baseIndex + (subdivisions + 1) + 1); /* top-right */
+        indices.push_back(baseIndex + (subdivisions + 1)); /* top-left */
+      }
+    }
+
+    unsigned int VAO, VBO, EBO;
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+
+    glGenBuffers(1, &EBO);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+    // position attribute
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // texture attribute
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(5 * sizeof(float)));
+    glEnableVertexAttribArray(2);  
+
+    SubdividedPlane* subdividedPlane = new SubdividedPlane;
+    subdividedPlane->VAO = VAO;
+    subdividedPlane->VBO = VBO;
+    subdividedPlane->indices = indices;
+    subdividedPlane->shaderProgram = shaderProgram;
+
+    SubdividedPlanes.push_back(subdividedPlane);
+    return subdividedPlane;
+  }
+
+  void draw() {
+    glUseProgram(shaderProgram);
+
+    for (int i = 0; i < textures.size(); ++i) {
+      glActiveTexture(GL_TEXTURE1 + textures[i]);
+      glBindTexture(GL_TEXTURE_2D, textures[i]);
+    }
+
+    // Build the transformation matrix
+    glm::mat4 identity = glm::mat4(1.0f); // identity matrix 
+
+    // Apply translation
+    glm::mat4 model = glm::translate(identity, pos); 
+
+    // Apply rotation on top of translation
+    model = glm::rotate(model, glm::radians(rotation.x), glm::vec3(1, 0, 0)); 
+    model = glm::rotate(model, glm::radians(rotation.y), glm::vec3(0, 1, 0)); 
+    model = glm::rotate(model, glm::radians(rotation.z), glm::vec3(0, 0, 1)); 
+
+    // Apply scale on top of translation and rotation
+    model = glm::scale(model, scale); 
+
+    // Create the view matrix
+    glm::mat4 view = activeCamera.getViewMatrix();
+
+    // Create a perspective projection matrix
+    glm::mat4 projection = activeCamera.getProjectionMatrix();
+
+    // Send the matrices to the shader
+    int modelLoc = glGetUniformLocation(shaderProgram, "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    int viewLoc = glGetUniformLocation(shaderProgram, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+    int projectionLoc = glGetUniformLocation(shaderProgram, "projection");
+    glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+  }
+};
+
 #endif 

@@ -16,7 +16,7 @@ float lastTime = glfwGetTime();
 
 class Input {
 private:
-  // Delta time
+  /* Delta time is the time between frames */
   static float getDelta() {
     float delta = glfwGetTime() - lastTime;
     lastTime = glfwGetTime();
@@ -25,8 +25,7 @@ private:
   }
 
 public:
-
-  // Zero out all the values for input tracking
+  /* Zero out all the values for input tracking */
   static void inputInit() {
     for (int i = 0; i <= GLFW_KEY_LAST; ++i) {
       currentState[i] = false;
@@ -38,7 +37,7 @@ public:
     }
   }
 
-  // Retrieve the current input state using GLFW for all keys up to GLFW_KEY_LAST which equates to key 348, the last in the sequence
+  /* Retrieve the current input state using GLFW for all keys up to GLFW_KEY_LAST which equates to key 348, the last in the sequence */
   static void updateInputState(GLFWwindow* window) {
     glfwPollEvents();
     delta = getDelta();
@@ -53,7 +52,6 @@ public:
     }
   }
 
-  // Check for key/mouse presses, releases, and whether it's held down
   static bool getKeyPressed(int key) {
     return currentState[key] && !previousState[key];
   }
@@ -78,7 +76,6 @@ public:
     return currentMouse[button];
   }
 
-  // Mouse positions
   static double getMouseX() {
     double xpos, ypos;
     glfwGetCursorPos(window, &xpos, &ypos);

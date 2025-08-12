@@ -14,10 +14,12 @@
 #include "model.h"
 
 GLFWwindow* window;
+Camera activeCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.0f);
+
+#define terminate() glfwTerminate()
 
 class Engine {
 private:
-
   static void draw() {
     /**
      * TODO Bundle everything into a mesh class with for example, Cube class as
@@ -39,8 +41,9 @@ private:
 public:
   static int initialize() {
     /* Initialize GLFW */
-    if (!glfwInit())
+    if (!glfwInit()) {
       return -1;
+    }
 
     /* Initialize input */
     Input::inputInit();
@@ -55,13 +58,14 @@ public:
     window = glfwCreateWindow(width, height, title, NULL, NULL);
 
     if (!window) {
+      while (GLenum error = glGetError()) {
+        std::cout << "Error while creating window: " << error << std::endl;
+      }
       glfwTerminate();
-      printf("Failed to create window.");
       return window;
     }
 
     glfwMakeContextCurrent(window);
-
     gladLoadGL();
     
     /* Handle draw order */
@@ -86,16 +90,9 @@ public:
     glfwSwapBuffers(window);
   }
 
-  static void terminate() {
-    glfwTerminate();
-  }
-
   static void wireframeView(bool enabled) {
     glPolygonMode(GL_FRONT_AND_BACK, enabled ? GL_LINE : GL_FILL);
   }
-
 };
-
-Camera activeCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.0f);
 
 #endif // ENGINE_H

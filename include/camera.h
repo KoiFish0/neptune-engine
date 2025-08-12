@@ -7,7 +7,7 @@
 struct Camera {
   glm::vec3 position;
   glm::vec3 lookVector;
-  glm::vec3 up; // Up vector relative to the look direction; used for pitch/roll
+  glm::vec3 up; /* Up vector relative to the look direction; used for pitch/roll */
   
   float fov;
   float aspectRatio;

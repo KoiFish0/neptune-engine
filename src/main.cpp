@@ -16,7 +16,11 @@ int main(void) {
 
   Shader flatShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
 
-  SubdividedPlane* plane = SubdividedPlane::create(1250, flatShader.ID);
+  SubdividedPlane* plane = SubdividedPlane::create(500, flatShader.ID);
+
+  Cube* cube = Cube::create(flatShader.ID);
+
+  cube->setPos(0.0f, 5.0f, 0.0f);
 
   float planeScale = 5.0f;
   plane->scale = glm::vec3(planeScale, planeScale, planeScale);

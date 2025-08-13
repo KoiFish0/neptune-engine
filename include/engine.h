@@ -5,13 +5,12 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "shapes.h"
 #include "shader.h"
 #include "input.h"
 #include "camera.h"
 #include "globals.h"
 #include "texture.h"
-#include "model.h"
+#include "objects.h"
 
 GLFWwindow* window;
 Camera activeCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.0f);
@@ -21,14 +20,6 @@ Camera activeCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), gl
 class Engine {
 private:
   static void draw() {
-    /**
-     * TODO Bundle everything into a mesh class with for example, Cube class as
-     * a wrapper
-     */
-    for (Cube* Cube : Cubes) {
-      Cube->draw();
-    }
-
     for (Mesh* Mesh : Meshes) {
       Mesh->draw();
     }

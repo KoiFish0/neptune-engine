@@ -23,7 +23,7 @@ To use this engine, it's recommended to have these skills:
 ## Libraries used
  - GLFW (OpenGL wrapper) 
  - GLAD (OpenGL wrapper)
- - GLM (Math Library)
+ - GLM (Math library for OpenGL)
  - STB Image (Loading images)
  - ASSIMP (Loading models, Not fully implemented)
 
@@ -34,7 +34,6 @@ To use Neptune, you need to clone this repository.
 ```
 git clone https://github.com/KoiFish0/neptune-engine.git ./project-name
 ```
-
 From here, you can put your code in the src/ directory. You can use the included main.cpp file as a sample file.
 
 ## Documentation

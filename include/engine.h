@@ -5,17 +5,33 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "shader.h"
-#include "input.h"
-#include "camera.h"
-#include "globals.h"
-#include "texture.h"
-#include "objects.h"
+#include <shader.h>
+#include <input.h>
+#include <camera.h>
+#include <globals.h>
+#include <texture.h>
+#include <objects.h>
 
 GLFWwindow* window;
 Camera activeCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), 0.0f, 0.0f, 0.0f, 0.0f);
 
+#define CURSOR_NORMAL     0x00034001
+#define CURSOR_HIDDEN     0x00034002
+#define CURSOR_DISABLED   0x00034003
+#define CURSOR_CAPTURED   0x00034004
+
+/* Rendering specifics */
 #define terminate() glfwTerminate()
+#define verticalSync(enabled) glfwSwapInterval(enabled)
+#define wireframe(enabled) glPolygonMode(GL_FRONT_AND_BACK, (enabled) ? GL_LINE : GL_FILL)
+#define cullBackFace(enabled) (enabled) ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE)
+
+/* Input modes */
+#define cursorMode(mode) glfwSetInputMode(window, GLFW_CURSOR, mode);
+#define stickyKeys(enabled) glfwSetInputMode(window, GLFW_STICKY_KEYS, enabled);
+#define stickyMouseButtons(enabled) glfwSetInputMode(window, GLFW_STICKY_KEYS, enabled);
+#define lockKeyMods(enabled) glfwSetInputMode(window, GLFW_CURSOR, enabled);
+#define rawMouseMotion(enabled) glfwSetInputMode(window, GLFW_CURSOR, enabled);
 
 class Engine {
 private:
@@ -23,7 +39,6 @@ private:
     for (Mesh* Mesh : Meshes) {
       Mesh->draw();
     }
-
     for (SubdividedPlane* subdividedPlane : SubdividedPlanes) {
       subdividedPlane->draw();
     }
@@ -35,22 +50,17 @@ public:
     if (!glfwInit()) {
       return -1;
     }
-
     /* Initialize input */
     Input::inputInit();
     return 0;
   }
 
   static GLFWwindow* createWindow(int width, int height, const char* title) {
-    /** 
-     * Create a windowed mode window and its OpenGL context 
-     * TODO Let the caller control window mode 
-     */
     window = glfwCreateWindow(width, height, title, NULL, NULL);
 
     if (!window) {
       while (GLenum error = glGetError()) {
-        std::cout << "Error while creating window: " << error << std::endl;
+        printf("Error while creating window: %u", error);
       }
       glfwTerminate();
       return window;
@@ -61,15 +71,8 @@ public:
     
     /* Handle draw order */
     glEnable(GL_DEPTH_TEST);
-
-    /** 
-     * Capture the mouse and hide the cursor
-     * TODO Create an interface for setting these parameters at runtime
-     */
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
-    /* Enable vertical sync */
-    glfwSwapInterval(1);
+    /* Back face culling */
+    glEnable(GL_CULL_FACE);
 
     return window;
   }
@@ -80,10 +83,6 @@ public:
     draw(); 
     glfwSwapBuffers(window);
   }
-
-  static void wireframeView(bool enabled) {
-    glPolygonMode(GL_FRONT_AND_BACK, enabled ? GL_LINE : GL_FILL);
-  }
 };
 
-#endif // ENGINE_H
+#endif

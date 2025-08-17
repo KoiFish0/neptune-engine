@@ -1,6 +1,7 @@
 /* A file used for testing the engine */
 
 #include "engine.h"
+#include "texture.h"
 
 int width = 2560;
 int height = 1440;
@@ -10,17 +11,19 @@ int main(void) {
   debugPrint = true;
 
   Engine::createWindow(width, height, "Test");
-//  Engine::wireframeView(true);
+  verticalSync(1);
+  wireframe(0);
+  cursorMode(CURSOR_DISABLED);
 
   glClearColor(0.3f, 0.3f, 0.3f, 0.3f);
 
   Shader flatShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
 
-  SubdividedPlane* plane = SubdividedPlane::create(500, flatShader.ID);
+  Texture texture("assets/awesomeface.png", 1, true, GENERIC);
 
   Cube* cube = Cube::create(flatShader.ID);
 
-  cube->setPos(0.0f, 5.0f, 0.0f);
+  SubdividedPlane* plane = SubdividedPlane::create(500, flatShader.ID);
 
   float planeScale = 5.0f;
   plane->scale = glm::vec3(planeScale, planeScale, planeScale);
@@ -44,15 +47,14 @@ int main(void) {
 
   float sensitivity = 0.15f;
 
-  // Initial look vector
+  /* Initial look vector */
   float yaw = -90.0f;
   float pitch = 0.0f;
 
   while (!glfwWindowShouldClose(window)) {
-    flatShader.setVec3("cameraPos", activeCamera.position); 
     double deltaX = Input::getMouseX() - lastX;
     double deltaY = lastY - Input::getMouseY();
-    
+
     deltaX *= sensitivity;
     deltaY *= sensitivity;
 
@@ -62,7 +64,7 @@ int main(void) {
     yaw += deltaX;
     pitch += deltaY;
 
-    // Limit pitch to avoid flipping
+    /* Limit pitch to avoid flipping */
     if (pitch > 89.0) {
         pitch = 89.0;
     }
@@ -109,8 +111,6 @@ int main(void) {
 
     Engine::refresh();
   }
-
-  // Terminate the window
   terminate();
   return 0;
 }

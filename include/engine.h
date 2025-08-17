@@ -39,6 +39,11 @@ private:
     for (Mesh* Mesh : Meshes) {
       Mesh->draw();
     }
+
+    for (Cube* cube : Cubes) {
+      cube->draw();
+    }
+
     for (SubdividedPlane* subdividedPlane : SubdividedPlanes) {
       subdividedPlane->draw();
     }

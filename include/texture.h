@@ -6,8 +6,8 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
 
-#include "globals.h"
-#include "stb_image/stb_image.h"
+#include <globals.h>
+#include <stb_image/stb_image.h>
 
 /*
  * TextureType describes what the texture is used for. This is important for

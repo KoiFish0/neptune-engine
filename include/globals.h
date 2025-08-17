@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "camera.h"
+#include <camera.h>
 
 extern int width, height;
 

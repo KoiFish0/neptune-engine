@@ -3,7 +3,7 @@
 
 #include <GLFW/glfw3.h>
 
-#include "globals.h"
+#include <globals.h>
 
 bool currentState[GLFW_KEY_LAST + 1] = { false };
 bool previousState[GLFW_KEY_LAST + 1] = { false };

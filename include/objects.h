@@ -7,6 +7,7 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
+#include "texture.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -119,57 +120,29 @@ public:
   glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
-  std::vector<unsigned int> textures;
-  std::vector<unsigned int> indices;
+  std::vector<Texture> textures;
+  unsigned int indicesCount;
   unsigned int shaderProgram;
   unsigned int VAO, VBO, EBO;
 
 
-  static Mesh* create(std::vector<float> vertices, std::vector<unsigned int> indices, unsigned int shaderProgram) {
-    unsigned int VAO, VBO, EBO;
+  Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, unsigned int shader) {
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    VertexDataObject VDO(vertices, indices, POSITION_NORMAL_TEXTURE);
 
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-
-    glGenBuffers(1, &EBO);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // normal attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3* sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // texture attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);  
-
-    glBindVertexArray(0);
-
-    Mesh* mesh = new Mesh;
-    mesh->VAO = VAO;
-    mesh->VBO = VBO;
-    mesh->VBO = EBO;
-    mesh->indices = indices;
-    mesh->shaderProgram = shaderProgram;
-
-    Meshes.push_back(mesh);
-    return mesh;
+    VAO = VDO.VAO;
+    VBO = VDO.VBO;
+    VBO = VDO.EBO;
+    indicesCount = indices.size();
+    shaderProgram = shader;
   }
 
   void draw() {
     glUseProgram(shaderProgram);
 
     for (int i = 0; i < textures.size(); ++i) {
-      glActiveTexture(GL_TEXTURE1 + textures[i]);
-      glBindTexture(GL_TEXTURE_2D, textures[i]);
+      glActiveTexture(GL_TEXTURE1 + textures[i].texture);
+      glBindTexture(GL_TEXTURE_2D, textures[i].texture);
     }
 
     // Build the transformation matrix
@@ -203,7 +176,7 @@ public:
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
   }
 };  
@@ -223,8 +196,6 @@ public:
   unsigned int VAO, VBO;
 
   Cube(unsigned int shader) {
-
-    /* TODO Fix winding order for back face culling */
     std::vector<float> vertices = {
       // Back face (-Z)
       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f, // 0
@@ -346,10 +317,11 @@ public:
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
   unsigned int shaderProgram;
   std::vector<unsigned int> textures;
-  std::vector<unsigned int> indices;
+  unsigned int indicesCount;
 
   SubdividedPlane(int subdivisions, unsigned int shader) {
     std::vector<float> vertices;
+    std::vector<unsigned int> indices;
 
     const float planeWidth = 10.0f;
     const float planeHeight = 10.0f;
@@ -385,6 +357,7 @@ public:
 
     VAO = VDO.VAO;
     VBO = VDO.VBO;
+    indicesCount = indices.size();
     shaderProgram = shader;
 
     SubdividedPlanes.push_back(this);
@@ -429,76 +402,9 @@ public:
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
   }
-};
-
-/* WIP This class is currently very unfinished */
-class Model {
-public:
-  Model(char *path) {
-    loadModel(path);
-  }
-
-  void Draw(unsigned int shaderProgram) {
-    for(unsigned int i = 0; i < meshes.size(); i++)
-      meshes[i].draw();
-  }  
-
-private:
-  std::vector<Mesh> meshes;
-  std::string directory;
-
-  void loadModel(std::string path) {
-    Assimp::Importer import;
-    const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);	
-
-    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-      std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
-      return;
-    }
-
-    directory = path.substr(0, path.find_last_of('/'));
-    processNode(scene->mRootNode, scene);
-  }  
-
-  void processNode(aiNode *node, const aiScene *scene) {
-    // process all the node's meshes (if any)
-    for(unsigned int i = 0; i < node->mNumMeshes; i++) {
-      aiMesh *mesh = scene->mMeshes[node->mMeshes[i]]; 
-      meshes.push_back(processMesh(mesh, scene));			
-    }
-
-    // then do the same for each of its children
-    for(unsigned int i = 0; i < node->mNumChildren; i++) {
-      processNode(node->mChildren[i], scene);
-    }
-  }  
-
-  Mesh processMesh(aiMesh *mesh, const aiScene *scene) {
-    std::vector<float> vertices;
-    std::vector<unsigned int> indices;
-    std::vector<unsigned int> textures;
-
-    for(unsigned int i = 0; i < mesh->mNumVertices; i++)
-    {
-      float vertex;
-      // process vertex positions, normals and texture coordinates
-      vertices.push_back(vertex);
-    }
-    // process indices
-    //
-    // process material
-    if(mesh->mMaterialIndex >= 0)
-    {
-      // [...]
-    }
-
-    return *Mesh::create(vertices, indices, 0);
-  }  
-
-  std::vector<unsigned int> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
 };
 
 #endif

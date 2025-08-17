@@ -1,7 +1,6 @@
 /* A file used for testing the engine */
 
 #include "engine.h"
-#include "texture.h"
 
 int width = 2560;
 int height = 1440;
@@ -19,14 +18,14 @@ int main(void) {
 
   Shader flatShader("src/shaders/terrain.vert", "src/shaders/terrain.frag");
 
-  Texture texture("assets/awesomeface.png", 1, true, GENERIC);
+  Cube cube(flatShader.ID);
 
-  Cube* cube = Cube::create(flatShader.ID);
+  cube.pos.y = 1.0f;
 
-  SubdividedPlane* plane = SubdividedPlane::create(500, flatShader.ID);
+  SubdividedPlane plane(500, flatShader.ID);
 
   float planeScale = 5.0f;
-  plane->scale = glm::vec3(planeScale, planeScale, planeScale);
+  plane.scale = glm::vec3(planeScale, planeScale, planeScale);
 
   Camera camera(
       glm::vec3(0.0f, 0.0f, 2.0f),   

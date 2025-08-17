@@ -222,7 +222,7 @@ public:
   unsigned int shaderProgram;
   unsigned int VAO, VBO;
 
-  static Cube* create(unsigned int shaderProgram) {
+  Cube(unsigned int shader) {
 
     /* TODO Fix winding order for back face culling */
     std::vector<float> vertices = {
@@ -280,13 +280,11 @@ public:
 
     VertexDataObject VDO(vertices, indices, POSITION_NORMAL_TEXTURE);
 
-    Cube* cube = new Cube;
-    cube->VAO = VDO.VAO;
-    cube->VBO = VDO.VBO;
-    cube->shaderProgram = shaderProgram;
+    VAO = VDO.VAO;
+    VBO = VDO.VBO;
+    shaderProgram = shader;
 
-    Cubes.push_back(cube);
-    return cube;
+    Cubes.push_back(this);
   }
 
   void draw() {
@@ -350,9 +348,8 @@ public:
   std::vector<unsigned int> textures;
   std::vector<unsigned int> indices;
 
-  static SubdividedPlane* create(int subdivisions, unsigned int shaderProgram) {
+  SubdividedPlane(int subdivisions, unsigned int shader) {
     std::vector<float> vertices;
-    std::vector<unsigned int> indices;
 
     const float planeWidth = 10.0f;
     const float planeHeight = 10.0f;
@@ -386,14 +383,11 @@ public:
 
     VertexDataObject VDO(vertices, indices, POSITION_TEXTURE);
 
-    SubdividedPlane* subdividedPlane = new SubdividedPlane;
-    subdividedPlane->VAO = VDO.VAO;
-    subdividedPlane->VBO = VDO.VBO;
-    subdividedPlane->indices = indices;
-    subdividedPlane->shaderProgram = shaderProgram;
+    VAO = VDO.VAO;
+    VBO = VDO.VBO;
+    shaderProgram = shader;
 
-    SubdividedPlanes.push_back(subdividedPlane);
-    return subdividedPlane;
+    SubdividedPlanes.push_back(this);
   }
 
   void draw() {

@@ -7,7 +7,6 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
-#include "texture.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -21,10 +20,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <iostream>
-#include <string>
 #include <vector>
 
+#include <texture.h>
 #include <globals.h>
 
 struct Vertex {
@@ -181,7 +179,9 @@ public:
   }
 };  
 
-/* 3D Objects */
+/* 
+ * 3D Objects 
+ */
 class Cube;
 
 std::vector<Cube*> Cubes;
@@ -199,14 +199,14 @@ public:
     std::vector<float> vertices = {
       // Back face (-Z)
       -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f, // 0
-       0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f, // 1
-       0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f, // 2
+      0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  0.0f, // 1
+      0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  1.0f,  1.0f, // 2
       -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  1.0f, // 3
 
       // Front face (+Z)
       -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  0.0f, // 4
-       0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f, // 5
-       0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f, // 6
+      0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  0.0f, // 5
+      0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  1.0f,  1.0f, // 6
       -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,  0.0f,  1.0f, // 7
 
       // Left face (-X)
@@ -216,21 +216,21 @@ public:
       -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  1.0f,  1.0f, // 11
 
       // Right face (+X)
-       0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, // 12
-       0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f, // 13
-       0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f, // 14
-       0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f, // 15
+      0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  0.0f, // 12
+      0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  0.0f,  1.0f, // 13
+      0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  1.0f, // 14
+      0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  1.0f,  0.0f, // 15
 
       // Bottom face (-Y)
       -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  1.0f, // 16
-       0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f, // 17
-       0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f, // 18
+      0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  1.0f, // 17
+      0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  1.0f,  0.0f, // 18
       -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  0.0f,  0.0f, // 19
 
       // Top face (+Y)
       -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  1.0f, // 20
-       0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f, // 21
-       0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f, // 22
+      0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  1.0f, // 21
+      0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  1.0f,  0.0f, // 22
       -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,  0.0f,  0.0f  // 23
     };
 
@@ -300,7 +300,6 @@ public:
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
   }
-
 };
 
 class SubdividedPlane;
@@ -315,8 +314,8 @@ public:
   glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
-  unsigned int shaderProgram;
   std::vector<unsigned int> textures;
+  unsigned int shaderProgram;
   unsigned int indicesCount;
 
   SubdividedPlane(int subdivisions, unsigned int shader) {
@@ -405,6 +404,127 @@ public:
     glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
   }
+};
+
+class Model;
+
+std::vector<Model> Models;
+
+/*
+ * Handle loading and drawing of imported 3D models. Model importing/loading is done through assimp:
+ * https://github.com/assimp/assimp
+ *
+ * Supported formats are listed here:
+ * https://github.com/assimp/assimp/blob/master/doc/Fileformats.md
+ *
+ * Some code in this class is a modified version of code from:
+ * https://learnopengl.com/Model-Loading/Model
+ */
+class Model {
+public:
+  glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
+  glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+  glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+
+  Model(char* path) {
+    directory = path;
+    loadModel(path);
+  }
+
+  void draw(unsigned int shaderProgram) {
+    for (int i = 0; i < meshes.size(); ++i) {
+      meshes[i].draw(shader);
+    }
+  }
+
+private:
+  std::vector<Mesh> meshes;
+  char* directory;  
+  unsigned int shader; 
+
+  void loadModel(std::string path) {
+    Assimp::Importer import;
+    const aiScene *scene = import.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);	
+
+    /* Error while importing model */
+    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
+      std::cout << "ERROR::ASSIMP::" << import.GetErrorString() << std::endl;
+      return;
+    }
+
+    directory = path.substr(0, path.find_last_of('/'));
+
+    processNode(scene->mRootNode, scene);
+  }  
+
+  void processNode(aiNode* node, const aiScene* scene) {
+    /* Process all the node's meshes (if any) */
+    for(unsigned int i = 0; i < node->mNumMeshes; i++) {
+      aiMesh* mesh = scene->mMeshes[node->mMeshes[i]]; 
+      meshes.push_back(processMesh(mesh, scene));			
+    }
+
+    /* Then do the same for each of its children */
+    for(unsigned int i = 0; i < node->mNumChildren; i++) {
+      processNode(node->mChildren[i], scene);
+    }
+  }  
+
+  Mesh processMesh(aiMesh *mesh, const aiScene *scene) {
+    vector<Vertex> vertices;
+    vector<unsigned int> indices;
+    vector<Texture> textures;
+
+    /* Process vertices */
+    for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
+      Vertex vertex;
+      glm::vec3 vector; 
+
+      /* Position */
+      vector.x = mesh->mVertices[i].x;
+      vector.y = mesh->mVertices[i].y;
+      vector.z = mesh->mVertices[i].z; 
+      vertex.Position = vector;
+      /* Normal */
+      vector.x = mesh->mNormals[i].x;
+      vector.y = mesh->mNormals[i].y;
+      vector.z = mesh->mNormals[i].z;
+      vertex.Normal = vector;  
+
+      if(mesh->mTextureCoords[0]) { /* Check if the mesh contains texture coordinates */
+        glm::vec2 vec;
+        vec.x = mesh->mTextureCoords[0][i].x; 
+        vec.y = mesh->mTextureCoords[0][i].y;
+        vertex.TexCoords = vec;
+      } else {
+        /* No texture coordinates */
+        vertex.TexCoords = glm::vec2(0.0f, 0.0f);
+      }
+    }
+
+    /* 
+     * Process indices 
+     * For each face, retrieve its indices and push it back to the indices array
+     */
+    for(unsigned int i = 0; i < mesh->mNumFaces; i++) {
+      aiFace face = mesh->mFaces[i];
+      for(unsigned int j = 0; j < face.mNumIndices; j++) {
+        indices.push_back(face.mIndices[j]);
+      }
+    }  
+
+    /* Process material */
+
+    if(mesh->mMaterialIndex >= 0) {
+      aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+      vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+      textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+      vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+      textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    }  
+
+    return Mesh(vertices, indices, textures);
+  }  
 };
 
 #endif

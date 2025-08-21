@@ -52,27 +52,27 @@ public:
     }
   }
 
-  static bool getKeyPressed(int key) {
+  inline static bool getKeyPressed(int key) {
     return currentState[key] && !previousState[key];
   }
 
-  static bool getKeyReleased(int key) {
+  inline static bool getKeyReleased(int key) {
     return !currentState[key] && previousState[key];
   }
 
-  static bool getKeyDown(int key) {
+  inline static bool getKeyDown(int key) {
     return currentState[key];
   }
 
-  static bool getMousePressed(int button) {
+  inline static bool getMousePressed(int button) {
     return currentMouse[button] && !previousMouse[button];
   }
 
-  static bool getMouseReleased(int button) {
+  inline static bool getMouseReleased(int button) {
     return !currentMouse[button] && previousMouse[button];
   }
 
-  static bool getMouseDown(int button) {
+  inline static bool getMouseDown(int button) {
     return currentMouse[button];
   }
 

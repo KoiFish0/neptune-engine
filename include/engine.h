@@ -36,8 +36,8 @@ Camera activeCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), gl
 class Engine {
 private:
   static void draw() {
-    for (Mesh* Mesh : Meshes) {
-      Mesh->draw();
+    for (Model* Model : Models) {
+      Model->draw(Model->shaderProgram);
     }
 
     for (Cube* cube : Cubes) {

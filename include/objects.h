@@ -7,6 +7,7 @@
 #ifndef OBJECTS_H
 #define OBJECTS_H
 
+#include <assimp/material.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -120,22 +121,38 @@ public:
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
   std::vector<Texture> textures;
   unsigned int indicesCount;
-  unsigned int shaderProgram;
   unsigned int VAO, VBO, EBO;
 
 
-  Mesh(std::vector<float> vertices, std::vector<unsigned int> indices, unsigned int shader) {
+  Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> texturesArray) {
 
-    VertexDataObject VDO(vertices, indices, POSITION_NORMAL_TEXTURE);
+    /* OpenGL expects the vertices to be in one contiguous array */
+    std::vector<float> vertexArray;
+
+    for (int i = 0; i < vertices.size(); ++i) {
+      /* Position*/
+      vertexArray.push_back(vertices[i].Position.x);
+      vertexArray.push_back(vertices[i].Position.y);
+      vertexArray.push_back(vertices[i].Position.z);
+      /* Normal */
+      vertexArray.push_back(vertices[i].Normal.x);
+      vertexArray.push_back(vertices[i].Normal.y);
+      vertexArray.push_back(vertices[i].Normal.z);
+      /* Texture Coords */
+      vertexArray.push_back(vertices[i].TexCoords.x);
+      vertexArray.push_back(vertices[i].TexCoords.y);
+    }
+
+    VertexDataObject VDO(vertexArray, indices, POSITION_NORMAL_TEXTURE);
 
     VAO = VDO.VAO;
     VBO = VDO.VBO;
     VBO = VDO.EBO;
+    textures = texturesArray;
     indicesCount = indices.size();
-    shaderProgram = shader;
   }
 
-  void draw() {
+  void draw(unsigned int shaderProgram) {
     glUseProgram(shaderProgram);
 
     for (int i = 0; i < textures.size(); ++i) {
@@ -408,7 +425,7 @@ public:
 
 class Model;
 
-std::vector<Model> Models;
+std::vector<Model*> Models;
 
 /*
  * Handle loading and drawing of imported 3D models. Model importing/loading is done through assimp:
@@ -425,22 +442,23 @@ public:
   glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
+  unsigned int shaderProgram; 
 
-  Model(char* path) {
-    directory = path;
+  Model(std::string path) {
+//    directory = path.C_Str();
     loadModel(path);
+    Models.push_back(this);
   }
 
   void draw(unsigned int shaderProgram) {
     for (int i = 0; i < meshes.size(); ++i) {
-      meshes[i].draw(shader);
+      meshes[i].draw(shaderProgram);
     }
   }
 
 private:
   std::vector<Mesh> meshes;
   char* directory;  
-  unsigned int shader; 
 
   void loadModel(std::string path) {
     Assimp::Importer import;
@@ -452,7 +470,7 @@ private:
       return;
     }
 
-    directory = path.substr(0, path.find_last_of('/'));
+    //directory = path.substr(0, path.find_last_of('/'));
 
     processNode(scene->mRootNode, scene);
   }  
@@ -471,9 +489,9 @@ private:
   }  
 
   Mesh processMesh(aiMesh *mesh, const aiScene *scene) {
-    vector<Vertex> vertices;
-    vector<unsigned int> indices;
-    vector<Texture> textures;
+    std::vector<Vertex> vertices;
+    std::vector<unsigned int> indices;
+    std::vector<Texture> textures;
 
     /* Process vertices */
     for(unsigned int i = 0; i < mesh->mNumVertices; i++) {
@@ -514,16 +532,27 @@ private:
     }  
 
     /* Process material */
-
     if(mesh->mMaterialIndex >= 0) {
       aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
-      vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+      std::vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, DIFFUSE);
       textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
-      vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+      std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, SPECULAR);
       textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }  
 
     return Mesh(vertices, indices, textures);
+  }  
+
+  std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, enum TextureType typeName) {
+    std::vector<Texture> textures;
+    for(unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
+      aiString str;
+      mat->GetTexture(type, i, &str);
+      /* WIP Slot may be incorrect */
+      Texture texture(str.C_Str(), i, true, typeName);
+      textures.push_back(texture);
+    }
+    return textures;
   }  
 };
 

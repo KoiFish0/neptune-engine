@@ -20,6 +20,8 @@ int main(void) {
 
   Cube cube(flatShader.ID);
 
+  //Model model("assets/teapot.obj");
+
   cube.pos.y = 1.0f;
 
   SubdividedPlane plane(500, flatShader.ID);

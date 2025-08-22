@@ -1,6 +1,9 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
@@ -26,10 +29,11 @@ class Texture {
 public:
   unsigned int texture;
   enum TextureType type;
+  aiString path;
 
   /* TextureType has no effect outside of loading models. Use GENERIC if unsure. */
-  Texture(const char* path, int slot, bool containsAlpha, enum TextureType type) {
-    this->type = type;
+  Texture(const char* path, unsigned int slot, bool containsAlpha, enum TextureType typeName) {
+    type = typeName;
     glGenTextures(1, &texture);
     /*
      * Slots are defined as integers starting at GL_TEXTURE0 (0x84c0).

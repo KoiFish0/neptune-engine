@@ -1,16 +1,19 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
+#define STB_IMAGE_IMPLEMENTATION
+
+#include <GLFW/glfw3.h>
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
-#define STB_IMAGE_IMPLEMENTATION
+
+#include <stb_image/stb_image.h>
 
 #include <iostream>
-#include <GLFW/glfw3.h>
 
 #include <globals.h>
-#include <stb_image/stb_image.h>
+#include <error.h>
 
 /*
  * TextureType describes what the texture is used for. This is important for
@@ -56,7 +59,7 @@ public:
       glTexImage2D(GL_TEXTURE_2D, 0, containsAlpha ? GL_RGBA : GL_RGB, width, height, 0, containsAlpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, data);
       glGenerateMipmap(GL_TEXTURE_2D);
       if (debugPrint == true) {
-        std::cout << "Loaded texture: " << path << " (ID: " << texture << ")" << std::endl;
+        std::cout << "NEPTUNE::INFO: Loaded texture: " << path << " (ID: " << texture << ")" << std::endl;
       }
     } else {
       std::cout << "Failed to load texture: " << path << " (" << stbi_failure_reason() << ")" << std::endl;

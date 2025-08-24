@@ -24,6 +24,7 @@
 #include <vector>
 
 #include <texture.h>
+#include <error.h>
 #include <globals.h>
 
 struct Vertex {
@@ -114,13 +115,13 @@ std::vector<Mesh*> Meshes;
 
 class Mesh {
 private:
+  std::vector<unsigned int> indicesArray;
 
 public:
   glm::vec3 pos = glm::vec3(0.0f, 0.0f, 0.0f);
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
-  glm::vec3 scale = glm::vec3(1.0f, 1.0f, 1.0f);
+  glm::vec3 scale = glm::vec3(0.1f, 0.1f, 0.1f);
   std::vector<Texture> textures;
-  unsigned int indicesCount;
   unsigned int VAO, VBO, EBO;
 
 
@@ -147,9 +148,9 @@ public:
 
     VAO = VDO.VAO;
     VBO = VDO.VBO;
-    VBO = VDO.EBO;
+    EBO = VDO.EBO;
     textures = texturesArray;
-    indicesCount = indices.size();
+    indicesArray = indices;
   }
 
   void draw(unsigned int shaderProgram) {
@@ -191,7 +192,8 @@ public:
     glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
+
+    glDrawElements(GL_TRIANGLES, indicesArray.size(), GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
   }
 };  
@@ -444,13 +446,13 @@ public:
   glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f);
   unsigned int shaderProgram; 
 
-  Model(std::string path) {
-//    directory = path.C_Str();
+  Model(std::string path, unsigned int shader) {
     loadModel(path);
+    shaderProgram = shader;
     Models.push_back(this);
   }
 
-  void draw(unsigned int shaderProgram) {
+  void draw() {
     for (int i = 0; i < meshes.size(); ++i) {
       meshes[i].draw(shaderProgram);
     }
@@ -470,16 +472,17 @@ private:
       return;
     }
 
-    //directory = path.substr(0, path.find_last_of('/'));
+    directory = strcat(path.substr(0, path.find_last_of('/')).data(), "/");
 
     processNode(scene->mRootNode, scene);
   }  
 
   void processNode(aiNode* node, const aiScene* scene) {
+    neptuneInfo("Processing node");
     /* Process all the node's meshes (if any) */
     for(unsigned int i = 0; i < node->mNumMeshes; i++) {
       aiMesh* mesh = scene->mMeshes[node->mMeshes[i]]; 
-      meshes.push_back(processMesh(mesh, scene));			
+      meshes.push_back(processMesh(mesh, scene));
     }
 
     /* Then do the same for each of its children */
@@ -504,10 +507,15 @@ private:
       vector.z = mesh->mVertices[i].z; 
       vertex.Position = vector;
       /* Normal */
-      vector.x = mesh->mNormals[i].x;
-      vector.y = mesh->mNormals[i].y;
-      vector.z = mesh->mNormals[i].z;
-      vertex.Normal = vector;  
+      if (mesh->mNormals) {
+        vector.x = mesh->mNormals[i].x;
+        vector.y = mesh->mNormals[i].y;
+        vector.z = mesh->mNormals[i].z;
+        vertex.Normal = vector;  
+      } else {
+        /* No normal vectors */
+        vertex.Normal = glm::vec3(0.0f, 0.0f, 0.0f);
+      }
 
       if(mesh->mTextureCoords[0]) { /* Check if the mesh contains texture coordinates */
         glm::vec2 vec;
@@ -518,6 +526,7 @@ private:
         /* No texture coordinates */
         vertex.TexCoords = glm::vec2(0.0f, 0.0f);
       }
+      vertices.push_back(vertex);
     }
 
     /* 
@@ -539,7 +548,6 @@ private:
       std::vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, SPECULAR);
       textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }  
-
     return Mesh(vertices, indices, textures);
   }  
 
@@ -549,7 +557,7 @@ private:
       aiString str;
       mat->GetTexture(type, i, &str);
       /* WIP Slot may be incorrect */
-      Texture texture(str.C_Str(), i, true, typeName);
+      Texture texture(strcat(directory, str.C_Str()), i, true, typeName);
       textures.push_back(texture);
     }
     return textures;

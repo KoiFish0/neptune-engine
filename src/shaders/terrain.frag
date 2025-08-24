@@ -12,7 +12,7 @@ void main() {
   vec3 color;
 
   if (t <= 0.2) {
-    color = vec3(0.0, 0.6, 1.0) * t * 4;
+    color = vec3(0.0, 0.6, 1.0) * (t + 0.1) * 4;
   } else if (t >= 0.1 && t < 0.3) {
     color = vec3(0.804, 0.714, 0.486) * t * 4; // Sand
   } else if (t >= 0.3) {

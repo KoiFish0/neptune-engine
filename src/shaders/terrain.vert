@@ -55,7 +55,7 @@ float pNoise(vec2 p, float freq, int res){
 void main() {
     vec3 displacement = aPos;
 
-    displacement.y += pNoise(vec2(displacement.x, displacement.z), 0.5, 50) * 2;
+    displacement.y += pNoise(vec2(displacement.x, displacement.z), 0.5, 50) * 1;
 
     FragPos = vec3(model * vec4(displacement, 1.0));
     Normal = mat3(transpose(inverse(model))) * aNormal;

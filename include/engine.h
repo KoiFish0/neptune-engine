@@ -33,11 +33,12 @@ Camera activeCamera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), gl
 #define lockKeyMods(enabled) glfwSetInputMode(window, GLFW_CURSOR, enabled);
 #define rawMouseMotion(enabled) glfwSetInputMode(window, GLFW_CURSOR, enabled);
 
+
 class Engine {
 private:
   static void draw() {
     for (Model* Model : Models) {
-      Model->draw(Model->shaderProgram);
+      Model->draw();
     }
 
     for (Cube* cube : Cubes) {
